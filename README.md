@@ -414,7 +414,7 @@
     }
 
     .dot-buy {
-      background: var(--accent-strong);
+      background: #25d586;
     }
 
     .dot-sell {
@@ -727,7 +727,7 @@
       border-radius: 18px;
       padding: 18px 18px 16px;
       width: 92%;
-      max-width: 360px;
+      max-width: 380px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
       position: relative;
@@ -824,10 +824,6 @@
       margin-top: 10px;
       font-size: 11px;
       color: var(--text-muted);
-    }
-
-    .trade-modal .modal {
-      max-width: 380px;
     }
 
     .trade-asset {
@@ -1092,10 +1088,17 @@
       padding: 2px 8px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       color: var(--text-muted);
+      cursor: pointer;
     }
 
     .pill-accent {
       border-color: rgba(255, 159, 67, 0.7);
+      color: var(--accent-strong);
+    }
+
+    .pill.active {
+      background: rgba(255, 159, 67, 0.18);
+      border-color: rgba(255, 159, 67, 0.9);
       color: var(--accent-strong);
     }
 
@@ -1146,6 +1149,76 @@
       color: var(--text-muted);
       margin-right: 4px;
       margin-top: 4px;
+    }
+
+    .mode-toggle {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .mode-toggle button {
+      flex: 1;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(7, 10, 18, 0.98);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .mode-toggle button.active {
+      border-color: rgba(255, 159, 67, 0.9);
+      color: var(--accent-strong);
+      background: rgba(255, 159, 67, 0.14);
+    }
+
+    .settings-field {
+      margin-top: 6px;
+    }
+
+    .settings-field label {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .settings-field input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #060b14;
+      padding: 6px 9px;
+      font-size: 12px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .settings-field input:focus {
+      border-color: rgba(255, 159, 67, 0.8);
+      box-shadow: 0 0 0 1px rgba(255, 159, 67, 0.5);
+    }
+
+    .settings-row {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .settings-error {
+      font-size: 11px;
+      color: var(--danger);
+      margin-top: 4px;
+      min-height: 14px;
+    }
+
+    .settings-success {
+      font-size: 11px;
+      color: var(--accent-strong);
+      margin-top: 4px;
+      min-height: 14px;
     }
 
     .education-grid {
@@ -1308,7 +1381,7 @@
             <div class="hero-kpis">
               <div class="kpi">
                 <div class="kpi-label">Balance</div>
-                <div class="kpi-value" id="kpiBalance">$50,000.00</div>
+                <div class="kpi-value" id="kpiBalance">$100.00</div>
                 <div class="kpi-trend" id="kpiToday">+ $0.00 today</div>
               </div>
               <div class="kpi">
@@ -1331,12 +1404,12 @@
               </div>
             </div>
 
-            <div class="chart-timeframe">
-              <button class="active">1D</button>
-              <button>1W</button>
-              <button>1M</button>
-              <button>6M</button>
-              <button>1Y</button>
+            <div class="chart-timeframe" id="heroTimeframeButtons">
+              <button data-tf="1D" class="active">1D</button>
+              <button data-tf="1W">1W</button>
+              <button data-tf="1M">1M</button>
+              <button data-tf="6M">6M</button>
+              <button data-tf="1Y">1Y</button>
             </div>
 
             <div class="chart-body">
@@ -1450,20 +1523,21 @@
           <div>
             <div class="section-title">
               Markets board
-              <span class="section-title-pill">Active instruments</span>
+              <span class="section-title-pill">Scan & act</span>
             </div>
             <p class="section-subtitle">
-              Track every instrument OrangeVest simulates. Each tile carries its own mini chart, spread and movement
-              snapshot so you can scan quickly and act from one screen.
+              Filter by category or volatility and open trades straight from the board. Mini charts update with each
+              price tick.
             </p>
           </div>
-          <div class="pill-row">
-            <span class="pill pill-accent">Most volatile</span>
-            <span class="pill">Forex</span>
-            <span class="pill">Indices</span>
-            <span class="pill">Crypto</span>
-            <span class="pill">Stocks</span>
-            <span class="pill">Metals</span>
+          <div class="pill-row" id="marketsFilters">
+            <span class="pill pill-accent active" data-filter="all">All</span>
+            <span class="pill" data-filter="volatile">Most volatile</span>
+            <span class="pill" data-filter="forex">Forex</span>
+            <span class="pill" data-filter="indices">Indices</span>
+            <span class="pill" data-filter="crypto">Crypto</span>
+            <span class="pill" data-filter="stocks">Stocks</span>
+            <span class="pill" data-filter="metals">Metals</span>
           </div>
         </div>
 
@@ -1473,7 +1547,7 @@
       </div>
     </section>
 
-    <!-- SECTION: PROFILE (was pricing) -->
+    <!-- SECTION: PROFILE -->
     <section id="section-pricing" class="section">
       <div class="section-shell">
         <div class="section-header-row">
@@ -1497,6 +1571,10 @@
               attached to your profile.
             </p>
             <div id="profileOverviewDetails" style="display:none; margin-top:8px;">
+              <div class="profile-row">
+                <span>Display name</span>
+                <span id="profileDisplayName"></span>
+              </div>
               <div class="profile-row">
                 <span>Email</span>
                 <span id="profileEmail"></span>
@@ -1531,17 +1609,38 @@
           </div>
 
           <div class="profile-card">
-            <h3>Session notes</h3>
-            <p>
-              Keep an eye on how you behave, not just what the market does. Use this area as a quick mental checklist
-              for each session.
+            <h3>Settings & modes</h3>
+            <p style="margin-bottom:6px;">
+              Tune how OrangeVest behaves for you. Normal mode saves changes; Test mode gives you a sandbox with
+              1,000,000 that resets on refresh.
             </p>
-            <ul style="margin-top:8px; padding-left:16px; color:var(--text-muted); font-size:12px;">
-              <li>Are you trading your plan or chasing moves?</li>
-              <li>Is your current risk usage in line with your comfort level?</li>
-              <li>Have you set a daily loss limit for this session?</li>
-              <li>Did you pause after a loss before placing the next trade?</li>
-            </ul>
+
+            <div class="mode-toggle">
+              <button id="modeNormalBtn" class="active">Normal mode</button>
+              <button id="modeTestBtn">Test mode</button>
+            </div>
+            <div class="settings-row" id="modeDescription">
+              Normal: starting balance $100, trades and balance are saved to your profile.
+            </div>
+
+            <div class="settings-field">
+              <label for="displayNameInput">Display name</label>
+              <input id="displayNameInput" type="text" placeholder="Your name / nickname" />
+            </div>
+            <button class="btn btn-primary" style="margin-top:6px; padding:6px 12px;" id="saveDisplayNameBtn">
+              Save display name
+            </button>
+
+            <div class="settings-field" style="margin-top:10px;">
+              <label for="newPasswordInput">Change password</label>
+              <input id="newPasswordInput" type="password" placeholder="New password" />
+            </div>
+            <button class="btn btn-ghost" style="margin-top:6px; padding:6px 12px;" id="changePasswordBtn">
+              Update password
+            </button>
+
+            <div class="settings-success" id="settingsSuccess"></div>
+            <div class="settings-error" id="settingsError"></div>
           </div>
         </div>
       </div>
@@ -1658,7 +1757,7 @@
     </div>
   </div>
 
-  <!-- TRADE MODAL -->
+  <!-- BUY MODAL -->
   <div class="backdrop trade-modal" id="tradeBackdrop">
     <div class="modal">
       <div class="modal-header">
@@ -1706,127 +1805,94 @@
     </div>
   </div>
 
+  <!-- SELL MODAL -->
+  <div class="backdrop trade-modal" id="sellBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Close positions</h2>
+        <button class="modal-close" id="sellClose">×</button>
+      </div>
+      <div id="sellContent">
+        <div class="trade-asset" id="sellAssetLabel"></div>
+
+        <div class="trade-row">
+          <span>Current price</span>
+          <span id="sellPrice">0.00</span>
+        </div>
+
+        <div class="trade-row">
+          <span>Total quantity open</span>
+          <span id="sellTotalQty">0</span>
+        </div>
+
+        <div class="trade-qty-input">
+          <label for="sellQty" style="font-size:12px; color:var(--text-muted);">Quantity to close</label>
+          <input type="number" id="sellQty" min="1" step="1" value="10" />
+          <button data-sq="25">25%</button>
+          <button data-sq="50">50%</button>
+          <button data-sq="100">100%</button>
+        </div>
+
+        <div class="trade-info">
+          Approx. realised P&L is calculated at the time of closing.
+        </div>
+
+        <div class="trade-summary">
+          You are about to sell up to
+          <span id="sellQtySummary">0</span>
+          units of
+          <span id="sellSymbolSummary"></span>.
+        </div>
+
+        <div class="trade-error" id="sellError"></div>
+
+        <button class="btn btn-primary" style="width:100%; margin-top:6px;" id="sellSubmit">
+          Confirm sell
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ---------------------------
-    // DATA MODEL & STORAGE
+    // DATA MODEL & MODES
     // ---------------------------
 
     const STORAGE_KEY_USERS = "orangevest_users";
     const STORAGE_KEY_SESSION = "orangevest_session";
 
-    const INITIAL_BALANCE = 50000;
+    const NORMAL_START_BALANCE = 100;
+    const TEST_START_BALANCE = 1000000;
 
-    // Unified markets: includes sidebar, ticker & board
+    // unified markets + categories
     const MARKETS = [
-      // Forex
-      {
-        id: "eurusd",
-        name: "EUR / USD",
-        symbol: "EURUSD",
-        type: "Forex · Major",
-        price: 1.0852,
-        spread: 0.2,
-        change: 0,
-        history: []
-      },
-      {
-        id: "gbpusd",
-        name: "GBP / USD",
-        symbol: "GBPUSD",
-        type: "Forex · Major",
-        price: 1.2741,
-        spread: 0.3,
-        change: 0,
-        history: []
-      },
-      // Stocks
-      {
-        id: "aapl",
-        name: "Apple",
-        symbol: "AAPL",
-        type: "Stock CFD",
-        price: 196.7,
-        spread: 0.4,
-        change: 0,
-        history: []
-      },
-      {
-        id: "tsla",
-        name: "Tesla",
-        symbol: "TSLA",
-        type: "Stock CFD",
-        price: 241.32,
-        spread: 0.6,
-        change: 0,
-        history: []
-      },
-      // Crypto
-      {
-        id: "btc",
-        name: "Bitcoin",
-        symbol: "BTCUSD",
-        type: "Crypto CFD",
-        price: 62480,
-        spread: 32,
-        change: 0,
-        history: []
-      },
-      // Metals
-      {
-        id: "xauusd",
-        name: "Gold",
-        symbol: "XAUUSD",
-        type: "Gold · Spot",
-        price: 2356.2,
-        spread: 0.35,
-        change: 0,
-        history: []
-      },
-      // Indices & commodities from ticker
-      {
-        id: "dax40",
-        name: "DAX 40",
-        symbol: "DAX40",
-        type: "Index CFD",
-        price: 18950.4,
-        spread: 1.2,
-        change: 0,
-        history: []
-      },
-      {
-        id: "oil",
-        name: "US Crude Oil",
-        symbol: "OIL",
-        type: "Energy CFD",
-        price: 81.42,
-        spread: 0.09,
-        change: 0,
-        history: []
-      },
-      {
-        id: "nikkei",
-        name: "Nikkei 225",
-        symbol: "NIKKEI",
-        type: "Index CFD",
-        price: 39210.6,
-        spread: 1.8,
-        change: 0,
-        history: []
-      }
+      { id: "eurusd", name: "EUR / USD", symbol: "EURUSD", type: "Forex · Major", category: "forex", price: 1.0852, spread: 0.2, change: 0, history: [] },
+      { id: "gbpusd", name: "GBP / USD", symbol: "GBPUSD", type: "Forex · Major", category: "forex", price: 1.2741, spread: 0.3, change: 0, history: [] },
+      { id: "aapl", name: "Apple", symbol: "AAPL", type: "Stock CFD", category: "stocks", price: 196.7, spread: 0.4, change: 0, history: [] },
+      { id: "tsla", name: "Tesla", symbol: "TSLA", type: "Stock CFD", category: "stocks", price: 241.32, spread: 0.6, change: 0, history: [] },
+      { id: "btc", name: "Bitcoin", symbol: "BTCUSD", type: "Crypto CFD", category: "crypto", price: 62480, spread: 32, change: 0, history: [] },
+      { id: "xauusd", name: "Gold", symbol: "XAUUSD", type: "Gold · Spot", category: "metals", price: 2356.2, spread: 0.35, change: 0, history: [] },
+      { id: "dax40", name: "DAX 40", symbol: "DAX40", type: "Index CFD", category: "indices", price: 18950.4, spread: 1.2, change: 0, history: [] },
+      { id: "oil", name: "US Crude Oil", symbol: "OIL", type: "Energy CFD", category: "indices", price: 81.42, spread: 0.09, change: 0, history: [] },
+      { id: "nikkei", name: "Nikkei 225", symbol: "NIKKEI", type: "Index CFD", category: "indices", price: 39210.6, spread: 1.8, change: 0, history: [] }
     ];
 
-    function seedHistories() {
-      MARKETS.forEach((m) => {
-        if (!m.history || !m.history.length) {
-          m.history = [];
-          let base = m.price;
-          for (let i = 0; i < 40; i++) {
-            base *= 1 + (Math.random() - 0.5) * 0.01;
-            m.history.push(base);
-          }
-        }
-      });
+    // Normal/test mode
+    let mode = "normal"; // "normal" | "test"
+    let testState = null; // separate in-memory state for test mode
+
+    function createEmptyState(balance) {
+      return {
+        balance,
+        usedMargin: 0,
+        positions: [],
+        history: []
+      };
     }
+
+    // ---------------------------
+    // STORAGE HELPERS
+    // ---------------------------
 
     function loadUsers() {
       try {
@@ -1858,14 +1924,14 @@
       }
     }
 
-    function getCurrentUser() {
+    function getCurrentUserStored() {
       const session = loadSession();
       if (!session) return null;
       const users = loadUsers();
       return users[session.email] || null;
     }
 
-    function setCurrentUser(user) {
+    function setCurrentUserStored(user) {
       const users = loadUsers();
       users[user.email] = user;
       saveUsers(users);
@@ -1876,12 +1942,44 @@
       return {
         email,
         password,
-        balance: INITIAL_BALANCE,
+        displayName: email.split("@")[0],
+        balance: NORMAL_START_BALANCE,
         usedMargin: 0,
         positions: [],
         history: [],
         sessions: 1
       };
+    }
+
+    // Current effective "user state" depending on mode
+    function getActiveState() {
+      const stored = getCurrentUserStored();
+      if (!stored) {
+        if (mode === "test") {
+          if (!testState) testState = createEmptyState(TEST_START_BALANCE);
+          return testState;
+        }
+        return null;
+      }
+      if (mode === "test") {
+        if (!testState) testState = createEmptyState(TEST_START_BALANCE);
+        return testState;
+      }
+      return stored;
+    }
+
+    function saveActiveState(state) {
+      if (mode === "test") {
+        testState = state;
+      } else {
+        const user = getCurrentUserStored();
+        if (!user) return;
+        user.balance = state.balance;
+        user.usedMargin = state.usedMargin;
+        user.positions = state.positions;
+        user.history = state.history;
+        setCurrentUserStored(user);
+      }
     }
 
     // ---------------------------
@@ -1903,10 +2001,10 @@
 
     let authMode = "signin";
 
-    function openAuthModal(mode = "signin") {
-      authMode = mode;
+    function openAuthModal(modeChoice = "signin") {
+      authMode = modeChoice;
       authBackdrop.classList.add("show");
-      setAuthMode(mode);
+      setAuthMode(modeChoice);
       authEmail.value = "";
       authPassword.value = "";
       authError.textContent = "";
@@ -1917,9 +2015,9 @@
       authBackdrop.classList.remove("show");
     }
 
-    function setAuthMode(mode) {
-      authMode = mode;
-      const isSignIn = mode === "signin";
+    function setAuthMode(modeChoice) {
+      authMode = modeChoice;
+      const isSignIn = modeChoice === "signin";
       tabSignIn.classList.toggle("active", isSignIn);
       tabSignUp.classList.toggle("active", !isSignIn);
       authTitle.textContent = isSignIn ? "Sign in to continue" : "Create a new OrangeVest profile";
@@ -1972,6 +2070,7 @@
         users[email] = user;
         saveUsers(users);
         saveSession({ email });
+        testState = null;
         closeAuthModal();
         updateUI();
       } else {
@@ -1984,6 +2083,7 @@
         users[email] = user;
         saveUsers(users);
         saveSession({ email });
+        testState = null;
         closeAuthModal();
         updateUI();
       }
@@ -1991,8 +2091,13 @@
 
     btnLogout.addEventListener("click", () => {
       saveSession(null);
+      testState = null;
       updateUI();
     });
+
+    function getCurrentUser() {
+      return getCurrentUserStored();
+    }
 
     // ---------------------------
     // NAVIGATION
@@ -2043,6 +2148,9 @@
     const marketsPageGrid = document.getElementById("marketsPageGrid");
     const positionsListEl = document.getElementById("positionsList");
     const tickerTrack = document.getElementById("tickerTrack");
+    const marketsFilters = document.getElementById("marketsFilters");
+
+    let marketsFilter = "all";
 
     function formatPrice(value) {
       if (value < 10) return value.toFixed(4).replace(/\.?0+$/, "");
@@ -2093,14 +2201,21 @@
       marketsListEl.querySelectorAll(".btn-sell").forEach((btn) => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-market-sell");
-          attemptQuickSell(id);
+          openSellModal(id);
         });
       });
     }
 
+    function getFilteredMarkets() {
+      if (marketsFilter === "all") return [...MARKETS];
+      if (marketsFilter === "volatile") return getMostVolatileMarkets(9);
+      return MARKETS.filter((m) => m.category === marketsFilter);
+    }
+
     function renderMarketsPage() {
       marketsPageGrid.innerHTML = "";
-      MARKETS.forEach((m) => {
+      const list = getFilteredMarkets();
+      list.forEach((m) => {
         const card = document.createElement("div");
         card.className = "market-card";
         card.innerHTML = `
@@ -2137,17 +2252,32 @@
       marketsPageGrid.querySelectorAll(".btn-sell").forEach((btn) => {
         btn.addEventListener("click", () => {
           const id = btn.getAttribute("data-market-sell");
-          attemptQuickSell(id);
+          openSellModal(id);
         });
       });
 
       drawAllSparklines();
     }
 
+    marketsFilters.addEventListener("click", (e) => {
+      const pill = e.target.closest(".pill");
+      if (!pill) return;
+      const filter = pill.dataset.filter;
+      if (pill.classList.contains("active")) {
+        // clicking active again -> reset to all
+        marketsFilter = "all";
+      } else {
+        marketsFilter = filter;
+      }
+      marketsFilters.querySelectorAll(".pill").forEach((p) =>
+        p.classList.toggle("active", p.dataset.filter === marketsFilter)
+      );
+      renderMarketsPage();
+    });
+
     function renderTicker() {
       tickerTrack.innerHTML = "";
       const items = [...MARKETS];
-      // build two cycles for smooth loop
       for (let repeat = 0; repeat < 2; repeat++) {
         items.forEach((m) => {
           const item = document.createElement("div");
@@ -2165,7 +2295,7 @@
     }
 
     // ---------------------------
-    // TRADE MODAL & BUY
+    // BUY MODAL
     // ---------------------------
 
     const tradeBackdrop = document.getElementById("tradeBackdrop");
@@ -2183,8 +2313,13 @@
     let currentTradeMarket = null;
 
     function openTradeModal(marketId) {
-      const user = getCurrentUser();
-      if (!user) {
+      const baseUser = getCurrentUser();
+      if (!baseUser && mode === "normal") {
+        openAuthModal("signin");
+        return;
+      }
+      const state = getActiveState();
+      if (!state) {
         openAuthModal("signin");
         return;
       }
@@ -2225,8 +2360,8 @@
     tradeQtyInput.addEventListener("input", updateTradeCalculations);
 
     function updateTradeCalculations() {
-      const user = getCurrentUser();
-      if (!user || !currentTradeMarket) return;
+      const state = getActiveState();
+      if (!state || !currentTradeMarket) return;
 
       const qty = Math.max(1, parseInt(tradeQtyInput.value || "1", 10));
       tradeQtyInput.value = qty;
@@ -2237,14 +2372,14 @@
       const marginRequired = notional * 0.05;
       tradeMarginEl.textContent = "$" + marginRequired.toFixed(2);
 
-      const freeMargin = user.balance - user.usedMargin;
+      const freeMargin = state.balance - state.usedMargin;
       const maxSize = freeMargin > 0 ? Math.floor((freeMargin / 0.05) / price) : 0;
       tradeMaxSizeEl.textContent = `${maxSize} units`;
     }
 
     tradeSubmit.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user || !currentTradeMarket) {
+      const state = getActiveState();
+      if (!state || !currentTradeMarket) {
         tradeError.textContent = "You must be logged in to trade.";
         return;
       }
@@ -2253,7 +2388,7 @@
       const notional = qty * price;
       const marginRequired = notional * 0.05;
 
-      const freeMargin = user.balance - user.usedMargin;
+      const freeMargin = state.balance - state.usedMargin;
       if (marginRequired > freeMargin + 1e-6) {
         tradeError.textContent = "Not enough margin. Reduce quantity or add funds.";
         return;
@@ -2269,9 +2404,9 @@
         margin: marginRequired
       };
 
-      user.usedMargin += marginRequired;
-      user.positions.push(position);
-      user.history.push({
+      state.usedMargin += marginRequired;
+      state.positions.push(position);
+      state.history.push({
         time: new Date().toISOString(),
         action: "BUY",
         symbol: position.symbol,
@@ -2279,96 +2414,155 @@
         price
       });
 
-      setCurrentUser(user);
+      saveActiveState(state);
       closeTradeModal();
       updateUI();
     });
 
     // ---------------------------
-    // SELL / CLOSE
+    // SELL MODAL
     // ---------------------------
 
-    function attemptQuickSell(marketId) {
-      const user = getCurrentUser();
-      if (!user) {
+    const sellBackdrop = document.getElementById("sellBackdrop");
+    const sellClose = document.getElementById("sellClose");
+    const sellAssetLabel = document.getElementById("sellAssetLabel");
+    const sellPriceEl = document.getElementById("sellPrice");
+    const sellTotalQtyEl = document.getElementById("sellTotalQty");
+    const sellQtyInput = document.getElementById("sellQty");
+    const sellQtySummary = document.getElementById("sellQtySummary");
+    const sellSymbolSummary = document.getElementById("sellSymbolSummary");
+    const sellError = document.getElementById("sellError");
+    const sellSubmit = document.getElementById("sellSubmit");
+
+    let currentSellMarket = null;
+
+    function openSellModal(marketId) {
+      const baseUser = getCurrentUser();
+      if (!baseUser && mode === "normal") {
         openAuthModal("signin");
         return;
       }
-
-      const remaining = [];
-      let marginReleased = 0;
-      let closedCount = 0;
-      let pnl = 0;
-
-      const market = MARKETS.find((m) => m.id === marketId);
-      const currentPrice = market ? market.price : 0;
-
-      user.positions.forEach((p) => {
-        if (p.marketId === marketId) {
-          marginReleased += p.margin;
-          closedCount++;
-          const notional = p.qty * p.price;
-          const delta = (currentPrice - p.price) / p.price;
-          const realised = notional * delta;
-          pnl += realised;
-          user.history.push({
-            time: new Date().toISOString(),
-            action: "SELL",
-            symbol: p.symbol,
-            qty: p.qty,
-            price: currentPrice
-          });
-        } else {
-          remaining.push(p);
-        }
-      });
-
-      if (!closedCount) {
-        alert("No open positions in this market to sell.");
+      const state = getActiveState();
+      if (!state) {
+        openAuthModal("signin");
         return;
       }
+      currentSellMarket = MARKETS.find((m) => m.id === marketId);
+      if (!currentSellMarket) return;
 
-      user.positions = remaining;
-      user.usedMargin = Math.max(0, user.usedMargin - marginReleased);
-      user.balance += pnl;
+      const totalQty = state.positions
+        .filter((p) => p.marketId === marketId)
+        .reduce((acc, p) => acc + p.qty, 0);
 
-      setCurrentUser(user);
-      updateUI();
-      alert(
-        `Closed ${closedCount} position(s) in ${(market && market.symbol) || marketId.toUpperCase()}.\nRealised P&L: ${
-          pnl >= 0 ? "+" : ""
-        }$${pnl.toFixed(2)}`
-      );
+      sellBackdrop.classList.add("show");
+      sellError.textContent = "";
+      sellQtyInput.value = totalQty || 0;
+
+      sellAssetLabel.innerHTML = `
+        You are closing <strong>BUY</strong> positions on
+        <strong>${currentSellMarket.name} (${currentSellMarket.symbol})</strong>.
+      `;
+      sellPriceEl.textContent = formatPrice(currentSellMarket.price);
+      sellTotalQtyEl.textContent = totalQty;
+      sellSymbolSummary.textContent = currentSellMarket.symbol;
+      sellQtySummary.textContent = totalQty;
     }
 
-    function closeSinglePosition(positionId) {
-      const user = getCurrentUser();
-      if (!user) {
-        openAuthModal("signin");
+    function closeSellModal() {
+      sellBackdrop.classList.remove("show");
+      currentSellMarket = null;
+    }
+
+    sellClose.addEventListener("click", closeSellModal);
+    sellBackdrop.addEventListener("click", (e) => {
+      if (e.target === sellBackdrop) closeSellModal();
+    });
+
+    document.querySelectorAll(".trade-qty-input button[data-sq]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const state = getActiveState();
+        if (!state || !currentSellMarket) return;
+        const totalQty = state.positions
+          .filter((p) => p.marketId === currentSellMarket.id)
+          .reduce((acc, p) => acc + p.qty, 0);
+        const percent = parseInt(btn.getAttribute("data-sq"), 10) / 100;
+        const qty = Math.floor(totalQty * percent);
+        sellQtyInput.value = qty;
+        sellQtySummary.textContent = qty;
+      });
+    });
+
+    sellQtyInput.addEventListener("input", () => {
+      const qty = Math.max(0, parseInt(sellQtyInput.value || "0", 10));
+      sellQtyInput.value = qty;
+      sellQtySummary.textContent = qty;
+    });
+
+    sellSubmit.addEventListener("click", () => {
+      const state = getActiveState();
+      if (!state || !currentSellMarket) {
+        sellError.textContent = "You must be logged in to sell.";
         return;
       }
-      const pos = user.positions.find((p) => p.id === positionId);
-      if (!pos) return;
-      const market = MARKETS.find((m) => m.id === pos.marketId);
-      const currentPrice = market ? market.price : pos.price;
-      const notional = pos.qty * pos.price;
-      const delta = (currentPrice - pos.price) / pos.price;
-      const pnl = notional * delta;
 
-      user.positions = user.positions.filter((p) => p.id !== positionId);
-      user.usedMargin = Math.max(0, user.usedMargin - pos.margin);
-      user.balance += pnl;
-      user.history.push({
+      const totalQty = state.positions
+        .filter((p) => p.marketId === currentSellMarket.id)
+        .reduce((acc, p) => acc + p.qty, 0);
+
+      const qtyToClose = Math.max(1, parseInt(sellQtyInput.value || "0", 10));
+      if (qtyToClose > totalQty) {
+        sellError.textContent = "You don't have that many units open.";
+        return;
+      }
+
+      let remainingToClose = qtyToClose;
+      let marginReleased = 0;
+      let pnl = 0;
+      const currentPrice = currentSellMarket.price;
+      const newPositions = [];
+
+      for (const p of state.positions) {
+        if (p.marketId !== currentSellMarket.id || remainingToClose <= 0) {
+          newPositions.push(p);
+          continue;
+        }
+        const closeQty = Math.min(p.qty, remainingToClose);
+        const notional = p.price * closeQty;
+        const delta = (currentPrice - p.price) / p.price;
+        pnl += notional * delta;
+        const positionMarginPerUnit = p.margin / p.qty;
+        marginReleased += positionMarginPerUnit * closeQty;
+
+        if (closeQty < p.qty) {
+          newPositions.push({
+            ...p,
+            qty: p.qty - closeQty,
+            margin: p.margin - positionMarginPerUnit * closeQty
+          });
+        }
+        remainingToClose -= closeQty;
+      }
+
+      state.positions = newPositions;
+      state.usedMargin = Math.max(0, state.usedMargin - marginReleased);
+      state.balance += pnl;
+      state.history.push({
         time: new Date().toISOString(),
         action: "SELL",
-        symbol: pos.symbol,
-        qty: pos.qty,
+        symbol: currentSellMarket.symbol,
+        qty: qtyToClose,
         price: currentPrice
       });
 
-      setCurrentUser(user);
+      saveActiveState(state);
+      closeSellModal();
       updateUI();
-    }
+      alert(
+        `Closed ${qtyToClose} unit(s) in ${currentSellMarket.symbol}. Realised P&L: ${
+          pnl >= 0 ? "+" : ""
+        }$${pnl.toFixed(2)}`
+      );
+    });
 
     // ---------------------------
     // ACCOUNT & PROFILE UI
@@ -2393,6 +2587,7 @@
     const profileSubtitle = document.getElementById("profileSubtitle");
     const profileGuestHint = document.getElementById("profileGuestHint");
     const profileOverviewDetails = document.getElementById("profileOverviewDetails");
+    const profileDisplayName = document.getElementById("profileDisplayName");
     const profileEmail = document.getElementById("profileEmail");
     const profileBalance = document.getElementById("profileBalance");
     const profileOpenPositions = document.getElementById("profileOpenPositions");
@@ -2401,9 +2596,19 @@
     const profileSessions = document.getElementById("profileSessions");
     const profileTrades = document.getElementById("profileTrades");
 
+    const modeNormalBtn = document.getElementById("modeNormalBtn");
+    const modeTestBtn = document.getElementById("modeTestBtn");
+    const modeDescription = document.getElementById("modeDescription");
+    const displayNameInput = document.getElementById("displayNameInput");
+    const saveDisplayNameBtn = document.getElementById("saveDisplayNameBtn");
+    const newPasswordInput = document.getElementById("newPasswordInput");
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
+    const settingsSuccess = document.getElementById("settingsSuccess");
+    const settingsError = document.getElementById("settingsError");
+
     manageFundsBtn.addEventListener("click", () => {
-      const user = getCurrentUser();
-      if (!user) {
+      const baseUser = getCurrentUser();
+      if (!baseUser && mode === "normal") {
         openAuthModal("signin");
         return;
       }
@@ -2414,8 +2619,11 @@
       return "$" + v.toFixed(2);
     }
 
-    function updateProfileSection(user) {
-      if (!user) {
+    function updateProfileSection() {
+      const baseUser = getCurrentUser();
+      const state = getActiveState();
+
+      if (!baseUser) {
         profileSubtitle.textContent =
           "Connect an account to start building your OrangeVest profile: balances, positions and simple session statistics appear here.";
         profileGuestHint.style.display = "block";
@@ -2423,32 +2631,107 @@
         return;
       }
 
-      const equity = user.balance;
-      const usedMargin = user.usedMargin;
-      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
+      profileSubtitle.textContent =
+        mode === "test"
+          ? "Test mode: changes do not persist. Use this sandbox to experiment freely."
+          : "Your current OrangeVest session at a glance.";
 
-      profileSubtitle.textContent = "Your current OrangeVest session at a glance.";
       profileGuestHint.style.display = "none";
       profileOverviewDetails.style.display = "block";
 
-      profileEmail.textContent = user.email;
-      profileBalance.textContent = formatMoney(user.balance);
-      profileOpenPositions.textContent = user.positions.length;
-      profileUsedMargin.textContent = formatMoney(user.usedMargin);
+      profileDisplayName.textContent = baseUser.displayName || baseUser.email.split("@")[0];
+      profileEmail.textContent = baseUser.email;
+
+      const equity = state.balance;
+      const usedMargin = state.usedMargin;
+      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
+
+      profileBalance.textContent = formatMoney(state.balance);
+      profileOpenPositions.textContent = state.positions.length;
+      profileUsedMargin.textContent = formatMoney(state.usedMargin);
       profileRiskUsage.textContent = riskUsage.toFixed(0) + "%";
-      profileSessions.textContent = user.sessions || 1;
-      profileTrades.textContent = (user.history || []).length;
+      profileSessions.textContent = baseUser.sessions || 1;
+      profileTrades.textContent = (state.history || []).length;
+
+      displayNameInput.value = baseUser.displayName || "";
     }
 
-    function updateUI() {
-      const user = getCurrentUser();
+    function updateModeUI() {
+      modeNormalBtn.classList.toggle("active", mode === "normal");
+      modeTestBtn.classList.toggle("active", mode === "test");
+      modeDescription.textContent =
+        mode === "normal"
+          ? "Normal: starting balance $100, trades and balance are saved to your profile."
+          : "Test: balance $1,000,000, trades and balance reset when you reload.";
+    }
 
-      if (!user) {
+    modeNormalBtn.addEventListener("click", () => {
+      mode = "normal";
+      testState = null;
+      updateModeUI();
+      updateUI();
+    });
+
+    modeTestBtn.addEventListener("click", () => {
+      mode = "test";
+      testState = createEmptyState(TEST_START_BALANCE);
+      updateModeUI();
+      updateUI();
+    });
+
+    saveDisplayNameBtn.addEventListener("click", () => {
+      settingsSuccess.textContent = "";
+      settingsError.textContent = "";
+      const baseUser = getCurrentUser();
+      if (!baseUser) {
+        settingsError.textContent = "You must be signed in to change your display name.";
+        return;
+      }
+      const val = displayNameInput.value.trim();
+      if (!val) {
+        settingsError.textContent = "Display name cannot be empty.";
+        return;
+      }
+      baseUser.displayName = val;
+      setCurrentUserStored(baseUser);
+      settingsSuccess.textContent = "Display name updated.";
+      updateUI();
+    });
+
+    changePasswordBtn.addEventListener("click", () => {
+      settingsSuccess.textContent = "";
+      settingsError.textContent = "";
+      const baseUser = getCurrentUser();
+      if (!baseUser) {
+        settingsError.textContent = "You must be signed in to change your password.";
+        return;
+      }
+      const newPw = newPasswordInput.value;
+      if (!newPw) {
+        settingsError.textContent = "Enter a new password first.";
+        return;
+      }
+      const pwError = validatePassword(newPw);
+      if (pwError) {
+        settingsError.textContent = pwError;
+        return;
+      }
+      baseUser.password = newPw;
+      setCurrentUserStored(baseUser);
+      newPasswordInput.value = "";
+      settingsSuccess.textContent = "Password updated.";
+    });
+
+    function updateUI() {
+      const baseUser = getCurrentUser();
+      const state = getActiveState();
+
+      if (!baseUser && mode === "normal") {
         navUser.innerHTML = `<span>Guest</span>`;
         btnLogin.style.display = "inline-flex";
         btnLogout.style.display = "none";
         accountTypeLabel.textContent = "Guest · Connect to start tracking";
-        kpiBalance.textContent = formatMoney(INITIAL_BALANCE);
+        kpiBalance.textContent = formatMoney(NORMAL_START_BALANCE);
         kpiToday.textContent = "+ $0.00 today";
         kpiToday.classList.remove("negative");
         kpiPnL.textContent = "$0.00";
@@ -2461,24 +2744,32 @@
         riskStatusText.textContent = "No account connected";
         avgLeverage.textContent = "1 : 0";
         renderPositions(null);
-        updateProfileSection(null);
+        updateProfileSection();
         return;
       }
 
-      navUser.innerHTML = `Signed in as <span>${user.email}</span>`;
-      btnLogin.style.display = "none";
-      btnLogout.style.display = "inline";
+      // active state exists in both normal and test
+      if (baseUser) {
+        navUser.innerHTML = `Signed in as <span>${baseUser.displayName || baseUser.email}</span>`;
+        btnLogin.style.display = "none";
+        btnLogout.style.display = "inline";
+      } else {
+        // test mode with no stored user – treat as "Test guest"
+        navUser.innerHTML = `<span>Test mode</span>`;
+        btnLogin.style.display = "inline-flex";
+        btnLogout.style.display = "none";
+      }
 
-      accountTypeLabel.textContent = "Profile · Connected";
-
-      const equity = user.balance;
-      const usedMargin = user.usedMargin;
+      const equity = state.balance;
+      const usedMargin = state.usedMargin;
       const freeMargin = Math.max(0, equity - usedMargin);
 
-      kpiBalance.textContent = formatMoney(user.balance);
+      accountTypeLabel.textContent =
+        mode === "test" ? "Test mode · Not saved" : baseUser ? "Profile · Connected" : "Guest";
+
+      kpiBalance.textContent = formatMoney(state.balance);
       kpiToday.textContent = "+ $0.00 today";
       kpiToday.classList.remove("negative");
-
       kpiPnL.textContent = "$0.00";
       kpiOvernight.textContent = "– $0.00 overnight";
 
@@ -2491,13 +2782,13 @@
       riskUsageFill.style.width = Math.min(100, riskUsage).toFixed(0) + "%";
 
       let avgLev = 0;
-      if (user.positions.length > 0) {
-        const totalNotional = user.positions.reduce((acc, p) => acc + p.qty * p.price, 0);
+      if (state.positions.length > 0) {
+        const totalNotional = state.positions.reduce((acc, p) => acc + p.qty * p.price, 0);
         avgLev = totalNotional / equity;
       }
       avgLeverage.textContent = "1 : " + avgLev.toFixed(1);
 
-      if (user.positions.length === 0) {
+      if (state.positions.length === 0) {
         riskStatusText.textContent = "No open positions";
       } else if (riskUsage < 30) {
         riskStatusText.textContent = "Low risk usage";
@@ -2507,19 +2798,20 @@
         riskStatusText.textContent = "High risk usage";
       }
 
-      renderPositions(user);
-      updateProfileSection(user);
+      renderPositions(state);
+      updateProfileSection();
+      updateModeUI();
     }
 
-    function renderPositions(user) {
+    function renderPositions(state) {
       positionsListEl.innerHTML = "";
-      if (!user || user.positions.length === 0) {
+      if (!state || state.positions.length === 0) {
         positionsListEl.innerHTML =
           '<div class="position-empty">No open positions. Buy a market to get started.</div>';
         return;
       }
 
-      user.positions.forEach((p) => {
+      state.positions.forEach((p) => {
         const row = document.createElement("div");
         row.className = "position-row";
         const notional = p.qty * p.price;
@@ -2541,8 +2833,11 @@
 
       positionsListEl.querySelectorAll(".pos-sell-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-pos-id");
-          closeSinglePosition(id);
+          const stateNow = getActiveState();
+          if (!stateNow) return;
+          const pos = stateNow.positions.find((p) => p.id === btn.dataset.posId);
+          if (!pos) return;
+          openSellModal(pos.marketId);
         });
       });
     }
@@ -2595,7 +2890,7 @@
     }
 
     // ---------------------------
-    // HERO MARKET & CHART
+    // HERO MARKET & TIMEFRAMES
     // ---------------------------
 
     const heroCanvas = document.getElementById("heroChartCanvas");
@@ -2604,8 +2899,25 @@
     const heroPriceEl = document.getElementById("assetPrice");
     const heroChangeEl = document.getElementById("assetChange");
     const heroFooterInfo = document.getElementById("heroFooterInfo");
+    const heroTFButtons = document.getElementById("heroTimeframeButtons");
 
     let heroMarketId = null;
+    let heroTimeframe = "1D";
+
+    function heroSliceForTimeframe(history) {
+      const len = history.length;
+      if (len < 2) return history;
+      // Just different zooms over same recent window
+      const map = {
+        "1D": 40,
+        "1W": 60,
+        "1M": 80,
+        "6M": 100,
+        "1Y": 120
+      };
+      const target = map[heroTimeframe] || 40;
+      return history.slice(-Math.min(target, len));
+    }
 
     function selectMostVolatileHeroMarket() {
       const sorted = [...MARKETS].sort(
@@ -2633,37 +2945,67 @@
       const m = getHeroMarket();
       const data = m.history;
       if (!data || data.length < 2) return;
+      const sliced = heroSliceForTimeframe(data);
 
-      const lastPrice = data[data.length - 1];
-      const dayChange = ((lastPrice - data[0]) / data[0]) * 100;
+      const lastPrice = sliced[sliced.length - 1];
+      const dayChange = ((lastPrice - sliced[0]) / sliced[0]) * 100;
       const sign = dayChange >= 0 ? "+" : "";
       heroPriceEl.textContent = lastPrice.toFixed(2);
       heroChangeEl.textContent = `${sign}${dayChange.toFixed(2)}% (day)`;
       heroChangeEl.classList.toggle("negative", dayChange < 0);
 
-      drawLineChart(heroCanvas, data, "#25d586", "#ff6b6b");
+      drawLineChart(heroCanvas, sliced, "#25d586", "#ff6b6b");
+    }
+
+    heroTFButtons.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-tf]");
+      if (!btn) return;
+      heroTimeframe = btn.dataset.tf;
+      heroTFButtons.querySelectorAll("button").forEach((b) =>
+        b.classList.toggle("active", b === btn)
+      );
+      drawHeroChart();
+    });
+
+    function setupHeroSelection() {
+      selectMostVolatileHeroMarket();
+      const oneHour = 60 * 60 * 1000;
+      setInterval(selectMostVolatileHeroMarket, oneHour);
     }
 
     // ---------------------------
     // MINI MARKET CHARTS & TICKS
     // ---------------------------
 
+    function seedHistories() {
+      MARKETS.forEach((m) => {
+        if (!m.history || !m.history.length) {
+          m.history = [];
+          let base = m.price;
+          for (let i = 0; i < 60; i++) {
+            base *= 1 + (Math.random() - 0.5) * 0.01;
+            m.history.push(base);
+          }
+        }
+      });
+    }
+
     function updateMarketHistory() {
       MARKETS.forEach((m) => {
         if (!m.history) m.history = [];
         const last = m.history.length ? m.history[m.history.length - 1] : m.price;
         const drift =
-          m.id === "btc"
+          m.category === "crypto"
             ? 0.004
-            : m.id === "tsla" || m.id === "aapl"
+            : m.category === "stocks"
             ? 0.002
             : m.id === "oil"
             ? 0.0025
             : 0.0015;
         const vol =
-          m.id === "btc"
+          m.category === "crypto"
             ? 0.015
-            : m.id === "tsla" || m.id === "aapl"
+            : m.category === "stocks"
             ? 0.01
             : m.id === "oil"
             ? 0.012
@@ -2672,7 +3014,7 @@
         const move = last * (drift + (Math.random() - 0.5) * vol);
         const next = Math.max(0.0001, last + move);
         m.history.push(next);
-        if (m.history.length > 40) m.history.shift();
+        if (m.history.length > 120) m.history.shift();
         m.price = next;
         const rel = (m.price - m.history[0]) / m.history[0];
         m.change = rel * 100;
@@ -2683,32 +3025,16 @@
       MARKETS.forEach((m) => {
         const canvas = document.querySelector(`canvas[data-canvas="${m.id}"]`);
         if (!canvas) return;
-        drawLineChart(canvas, m.history, "#25d586", "#ff6b6b");
+        const slice = m.history.slice(-40);
+        drawLineChart(canvas, slice, "#25d586", "#ff6b6b");
       });
     }
 
     function updateMarketDisplays() {
-      // Update sidebar popular markets fully (re-render list)
       renderPopularMarketsSidebar();
-
-      // Update board prices/change
-      MARKETS.forEach((m) => {
-        const pagePriceSpan = document.querySelector(
-          `.market-card-price[data-price="${m.id}-page"]`
-        );
-        const pageChangeSpan = document.querySelector(
-          `.market-card-change[data-change="${m.id}-page"]`
-        );
-        if (pagePriceSpan) pagePriceSpan.textContent = formatPrice(m.price);
-        if (pageChangeSpan) {
-          pageChangeSpan.textContent = `${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%`;
-          pageChangeSpan.classList.toggle("positive", m.change >= 0);
-          pageChangeSpan.classList.toggle("negative", m.change < 0);
-        }
-      });
-
-      drawAllSparklines();
+      renderMarketsPage();
       renderTicker();
+      updateHeroMeta();
       drawHeroChart();
     }
 
@@ -2718,31 +3044,18 @@
     }
 
     // ---------------------------
-    // HERO MARKET SELECTION (hourly)
-    // ---------------------------
-
-    // Re-select hero market every hour based on absolute change
-    function setupHeroSelection() {
-      selectMostVolatileHeroMarket(); // initial
-      const oneHour = 60 * 60 * 1000;
-      setInterval(selectMostVolatileHeroMarket, oneHour);
-    }
-
-    // ---------------------------
     // INIT
     // ---------------------------
 
     function init() {
       seedHistories();
-      renderMarketsPage();
       renderPopularMarketsSidebar();
+      renderMarketsPage();
       renderTicker();
-      selectMostVolatileHeroMarket();
-      updateUI();
-
-      // timers
-      setInterval(tickMarkets, 2600);
       setupHeroSelection();
+      updateModeUI();
+      updateUI();
+      setInterval(tickMarkets, 2600);
     }
 
     init();
