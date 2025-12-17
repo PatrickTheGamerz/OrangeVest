@@ -1151,29 +1151,6 @@
       margin-top: 4px;
     }
 
-    .mode-toggle {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .mode-toggle button {
-      flex: 1;
-      font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(7, 10, 18, 0.98);
-      color: var(--text-muted);
-      padding: 4px 8px;
-      cursor: pointer;
-    }
-
-    .mode-toggle button.active {
-      border-color: rgba(255, 159, 67, 0.9);
-      color: var(--accent-strong);
-      background: rgba(255, 159, 67, 0.14);
-    }
-
     .settings-field {
       margin-top: 6px;
     }
@@ -1199,12 +1176,6 @@
     .settings-field input:focus {
       border-color: rgba(255, 159, 67, 0.8);
       box-shadow: 0 0 0 1px rgba(255, 159, 67, 0.5);
-    }
-
-    .settings-row {
-      margin-top: 6px;
-      font-size: 11px;
-      color: var(--text-muted);
     }
 
     .settings-error {
@@ -1369,12 +1340,12 @@
             <div class="hero-title">
               <div class="hero-title-badge">
                 <span class="hero-title-badge-dot"></span>
-                Live-style feed · Active markets
+                Live feed · Binance markets
               </div>
-              <h1>Trade global markets with a clean, simple interface.</h1>
+              <h1>Trade major crypto pairs with a clean, simple interface.</h1>
               <p>
-                Build and test your strategy across indices, forex, crypto, stocks and metals from a single OrangeVest
-                workspace.
+                Watch real-time data from Binance on Bitcoin, Ethereum and more. Use OrangeVest to practise entries,
+                exits and risk.
               </p>
             </div>
 
@@ -1395,12 +1366,12 @@
           <article class="chart-card">
             <div class="chart-header">
               <div>
-                <div class="asset-name" id="heroAssetName">Active market</div>
+                <div class="asset-name" id="heroAssetName">Loading...</div>
                 <div class="asset-symbol" id="heroAssetSymbol"></div>
               </div>
               <div>
                 <span class="asset-price" id="assetPrice">0.00</span>
-                <span class="asset-price-change" id="assetChange">0.00% (day)</span>
+                <span class="asset-price-change" id="assetChange">0.00% (24h)</span>
               </div>
             </div>
 
@@ -1428,7 +1399,7 @@
                   <span>Sell</span>
                 </div>
               </div>
-              <div id="heroFooterInfo">Spread and leverage reflect the selected market.</div>
+              <div id="heroFooterInfo">Real candles and 24h change from Binance.</div>
             </div>
           </article>
         </div>
@@ -1440,7 +1411,7 @@
             <div class="side-header">
               <div>
                 <h2>Popular markets</h2>
-                <span>Top 4 movers right now</span>
+                <span>Top 4 movers (24h)</span>
               </div>
               <button class="btn-text" id="viewAllMarketsBtn" style="color: var(--accent-strong);">View all</button>
             </div>
@@ -1523,21 +1494,17 @@
           <div>
             <div class="section-title">
               Markets board
-              <span class="section-title-pill">Scan & act</span>
+              <span class="section-title-pill">Binance spot snapshot</span>
             </div>
             <p class="section-subtitle">
-              Filter by category or volatility and open trades straight from the board. Mini charts update with each
-              price tick.
+              Filter by volatility or symbol and open trades straight from here. Mini charts are built from Binance
+              candlesticks.
             </p>
           </div>
           <div class="pill-row" id="marketsFilters">
             <span class="pill pill-accent active" data-filter="all">All</span>
             <span class="pill" data-filter="volatile">Most volatile</span>
-            <span class="pill" data-filter="forex">Forex</span>
-            <span class="pill" data-filter="indices">Indices</span>
             <span class="pill" data-filter="crypto">Crypto</span>
-            <span class="pill" data-filter="stocks">Stocks</span>
-            <span class="pill" data-filter="metals">Metals</span>
           </div>
         </div>
 
@@ -1557,18 +1524,16 @@
               <span class="section-title-pill">Your trading footprint</span>
             </div>
             <p class="section-subtitle" id="profileSubtitle">
-              Connect an account to start building your OrangeVest profile: balances, positions and simple session
-              statistics appear here.
+              Connect an account to keep balances, open trades and simple statistics attached to your profile.
             </p>
           </div>
         </div>
 
         <div class="profile-grid">
-          <div class="profile-card" id="profileOverviewCard">
+          <div class="profile-card">
             <h3>Account snapshot</h3>
             <p id="profileGuestHint">
-              You're currently browsing as a guest. Sign in or create an account to keep balances, trades and risk stats
-              attached to your profile.
+              You're currently browsing as a guest. Sign in or create an account to save your sessions.
             </p>
             <div id="profileOverviewDetails" style="display:none; margin-top:8px;">
               <div class="profile-row">
@@ -1609,19 +1574,10 @@
           </div>
 
           <div class="profile-card">
-            <h3>Settings & modes</h3>
+            <h3>Settings</h3>
             <p style="margin-bottom:6px;">
-              Tune how OrangeVest behaves for you. Normal mode saves changes; Test mode gives you a sandbox with
-              1,000,000 that resets on refresh.
+              Update how OrangeVest shows your profile.
             </p>
-
-            <div class="mode-toggle">
-              <button id="modeNormalBtn" class="active">Normal mode</button>
-              <button id="modeTestBtn">Test mode</button>
-            </div>
-            <div class="settings-row" id="modeDescription">
-              Normal: starting balance $100, trades and balance are saved to your profile.
-            </div>
 
             <div class="settings-field">
               <label for="displayNameInput">Display name</label>
@@ -1656,8 +1612,7 @@
               <span class="section-title-pill">Habits over hype</span>
             </div>
             <p class="section-subtitle">
-              Use the tools inside OrangeVest to polish how you size trades, respond to swings and protect your account
-              across different markets.
+              Use live prices to practise execution, but measure yourself by how you manage risk, not by a single trade.
             </p>
           </div>
         </div>
@@ -1667,8 +1622,8 @@
             <div class="education-step-label">Module 1</div>
             <h3>Risk per trade</h3>
             <p>
-              Decide in advance how much of your equity you’re willing to risk on a single idea. Small, consistent risk
-              makes drawdowns easier to recover from.
+              Decide in advance how much of your equity you risk on an idea. Small, consistent risk makes drawdowns
+              easier to recover from.
             </p>
             <div class="education-caption">
               Try: keep used margin below a fixed percentage of equity and notice how stress changes.
@@ -1679,11 +1634,11 @@
             <div class="education-step-label">Module 2</div>
             <h3>Leverage awareness</h3>
             <p>
-              Leverage magnifies movements. Watching “used margin”, “risk usage” and your open positions list teaches
-              you how quickly exposure stacks up.
+              High exposure means small moves can shift your equity quickly. Watching “used margin” and “risk usage”
+              keeps this visible.
             </p>
             <div class="education-caption">
-              Try: open multiple small positions instead of one oversized trade and compare the feeling.
+              Try: open several small positions instead of one oversized trade and compare how it feels.
             </div>
           </div>
 
@@ -1691,11 +1646,10 @@
             <div class="education-step-label">Module 3</div>
             <h3>Plan before placing</h3>
             <p>
-              A clear idea has a reason to enter, a place where it's wrong, and a rough exit plan. If you can’t write
-              it in a sentence, it might be noise.
+              A trade idea is clearer when you know why, where it’s wrong, and roughly where you’d scale out or exit.
             </p>
             <div class="education-caption">
-              Try: write your plan before you click buy, then review it after the trade closes.
+              Try: write your plan before you click buy, then review it when you close the trade.
             </div>
           </div>
 
@@ -1707,7 +1661,7 @@
               screen.
             </p>
             <div class="education-caption">
-              Try: after every session, note one thing you did well and one you’ll tighten next time.
+              Try: after every session, note one thing you did well and one thing you’ll tighten next time.
             </div>
           </div>
         </div>
@@ -1855,50 +1809,37 @@
 
   <script>
     // ---------------------------
-    // DATA MODEL & MODES
+    // CONFIG & MARKETS (Binance)
+    // ---------------------------
+
+    const BINANCE_BASE = "https://api.binance.com";
+
+    // Use common Binance USDT pairs
+    const MARKETS = [
+      { id: "BTCUSDT", name: "Bitcoin", symbol: "BTCUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "ETHUSDT", name: "Ethereum", symbol: "ETHUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "BNBUSDT", name: "BNB", symbol: "BNBUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "SOLUSDT", name: "Solana", symbol: "SOLUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "XRPUSDT", name: "XRP", symbol: "XRPUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "ADAUSDT", name: "Cardano", symbol: "ADAUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "DOGEUSDT", name: "Dogecoin", symbol: "DOGEUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "MATICUSDT", name: "Polygon", symbol: "MATICUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "LTCUSDT", name: "Litecoin", symbol: "LTCUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] }
+    ];
+
+    // ---------------------------
+    // STORAGE & USER MODEL
     // ---------------------------
 
     const STORAGE_KEY_USERS = "orangevest_users";
     const STORAGE_KEY_SESSION = "orangevest_session";
-
     const NORMAL_START_BALANCE = 100;
-    const TEST_START_BALANCE = 1000000;
-
-    // unified markets + categories
-    const MARKETS = [
-      { id: "eurusd", name: "EUR / USD", symbol: "EURUSD", type: "Forex · Major", category: "forex", price: 1.0852, spread: 0.2, change: 0, history: [] },
-      { id: "gbpusd", name: "GBP / USD", symbol: "GBPUSD", type: "Forex · Major", category: "forex", price: 1.2741, spread: 0.3, change: 0, history: [] },
-      { id: "aapl", name: "Apple", symbol: "AAPL", type: "Stock CFD", category: "stocks", price: 196.7, spread: 0.4, change: 0, history: [] },
-      { id: "tsla", name: "Tesla", symbol: "TSLA", type: "Stock CFD", category: "stocks", price: 241.32, spread: 0.6, change: 0, history: [] },
-      { id: "btc", name: "Bitcoin", symbol: "BTCUSD", type: "Crypto CFD", category: "crypto", price: 62480, spread: 32, change: 0, history: [] },
-      { id: "xauusd", name: "Gold", symbol: "XAUUSD", type: "Gold · Spot", category: "metals", price: 2356.2, spread: 0.35, change: 0, history: [] },
-      { id: "dax40", name: "DAX 40", symbol: "DAX40", type: "Index CFD", category: "indices", price: 18950.4, spread: 1.2, change: 0, history: [] },
-      { id: "oil", name: "US Crude Oil", symbol: "OIL", type: "Energy CFD", category: "indices", price: 81.42, spread: 0.09, change: 0, history: [] },
-      { id: "nikkei", name: "Nikkei 225", symbol: "NIKKEI", type: "Index CFD", category: "indices", price: 39210.6, spread: 1.8, change: 0, history: [] }
-    ];
-
-    // Normal/test mode
-    let mode = "normal"; // "normal" | "test"
-    let testState = null; // separate in-memory state for test mode
-
-    function createEmptyState(balance) {
-      return {
-        balance,
-        usedMargin: 0,
-        positions: [],
-        history: []
-      };
-    }
-
-    // ---------------------------
-    // STORAGE HELPERS
-    // ---------------------------
 
     function loadUsers() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY_USERS);
         return raw ? JSON.parse(raw) : {};
-      } catch (e) {
+      } catch {
         return {};
       }
     }
@@ -1911,17 +1852,14 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY_SESSION);
         return raw ? JSON.parse(raw) : null;
-      } catch (e) {
+      } catch {
         return null;
       }
     }
 
     function saveSession(session) {
-      if (session) {
-        localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(session));
-      } else {
-        localStorage.removeItem(STORAGE_KEY_SESSION);
-      }
+      if (session) localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(session));
+      else localStorage.removeItem(STORAGE_KEY_SESSION);
     }
 
     function getCurrentUserStored() {
@@ -1951,35 +1889,26 @@
       };
     }
 
-    // Current effective "user state" depending on mode
     function getActiveState() {
-      const stored = getCurrentUserStored();
-      if (!stored) {
-        if (mode === "test") {
-          if (!testState) testState = createEmptyState(TEST_START_BALANCE);
-          return testState;
-        }
-        return null;
-      }
-      if (mode === "test") {
-        if (!testState) testState = createEmptyState(TEST_START_BALANCE);
-        return testState;
-      }
-      return stored;
+      const u = getCurrentUserStored();
+      return u
+        ? {
+            balance: u.balance,
+            usedMargin: u.usedMargin,
+            positions: u.positions || [],
+            history: u.history || []
+          }
+        : null;
     }
 
     function saveActiveState(state) {
-      if (mode === "test") {
-        testState = state;
-      } else {
-        const user = getCurrentUserStored();
-        if (!user) return;
-        user.balance = state.balance;
-        user.usedMargin = state.usedMargin;
-        user.positions = state.positions;
-        user.history = state.history;
-        setCurrentUserStored(user);
-      }
+      const u = getCurrentUserStored();
+      if (!u) return;
+      u.balance = state.balance;
+      u.usedMargin = state.usedMargin;
+      u.positions = state.positions;
+      u.history = state.history;
+      setCurrentUserStored(u);
     }
 
     // ---------------------------
@@ -2001,10 +1930,10 @@
 
     let authMode = "signin";
 
-    function openAuthModal(modeChoice = "signin") {
-      authMode = modeChoice;
+    function openAuthModal(mode = "signin") {
+      authMode = mode;
       authBackdrop.classList.add("show");
-      setAuthMode(modeChoice);
+      setAuthMode(mode);
       authEmail.value = "";
       authPassword.value = "";
       authError.textContent = "";
@@ -2015,9 +1944,9 @@
       authBackdrop.classList.remove("show");
     }
 
-    function setAuthMode(modeChoice) {
-      authMode = modeChoice;
-      const isSignIn = modeChoice === "signin";
+    function setAuthMode(mode) {
+      authMode = mode;
+      const isSignIn = mode === "signin";
       tabSignIn.classList.toggle("active", isSignIn);
       tabSignUp.classList.toggle("active", !isSignIn);
       authTitle.textContent = isSignIn ? "Sign in to continue" : "Create a new OrangeVest profile";
@@ -2035,9 +1964,7 @@
 
     authSubmit.addEventListener("click", handleAuthSubmit);
     authPassword.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        handleAuthSubmit();
-      }
+      if (e.key === "Enter") handleAuthSubmit();
     });
 
     function validatePassword(pw) {
@@ -2070,7 +1997,6 @@
         users[email] = user;
         saveUsers(users);
         saveSession({ email });
-        testState = null;
         closeAuthModal();
         updateUI();
       } else {
@@ -2083,7 +2009,6 @@
         users[email] = user;
         saveUsers(users);
         saveSession({ email });
-        testState = null;
         closeAuthModal();
         updateUI();
       }
@@ -2091,7 +2016,6 @@
 
     btnLogout.addEventListener("click", () => {
       saveSession(null);
-      testState = null;
       updateUI();
     });
 
@@ -2141,7 +2065,7 @@
     });
 
     // ---------------------------
-    // MARKETS RENDERING
+    // UI ELEMENTS
     // ---------------------------
 
     const marketsListEl = document.getElementById("marketsList");
@@ -2150,17 +2074,274 @@
     const tickerTrack = document.getElementById("tickerTrack");
     const marketsFilters = document.getElementById("marketsFilters");
 
-    let marketsFilter = "all";
+    const kpiBalance = document.getElementById("kpiBalance");
+    const kpiToday = document.getElementById("kpiToday");
+    const kpiPnL = document.getElementById("kpiPnL");
+    const kpiOvernight = document.getElementById("kpiOvernight");
+
+    const equityValue = document.getElementById("equityValue");
+    const availableMarginValue = document.getElementById("availableMarginValue");
+    const usedMarginValue = document.getElementById("usedMarginValue");
+
+    const riskUsageLabel = document.getElementById("riskUsageLabel");
+    const riskUsageFill = document.getElementById("riskUsageFill");
+    const avgLeverage = document.getElementById("avgLeverage");
+    const riskStatusText = document.getElementById("riskStatusText");
+    const accountTypeLabel = document.getElementById("accountTypeLabel");
+    const manageFundsBtn = document.getElementById("manageFundsBtn");
+
+    const profileSubtitle = document.getElementById("profileSubtitle");
+    const profileGuestHint = document.getElementById("profileGuestHint");
+    const profileOverviewDetails = document.getElementById("profileOverviewDetails");
+    const profileDisplayName = document.getElementById("profileDisplayName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileBalance = document.getElementById("profileBalance");
+    const profileOpenPositions = document.getElementById("profileOpenPositions");
+    const profileUsedMargin = document.getElementById("profileUsedMargin");
+    const profileRiskUsage = document.getElementById("profileRiskUsage");
+    const profileSessions = document.getElementById("profileSessions");
+    const profileTrades = document.getElementById("profileTrades");
+
+    const displayNameInput = document.getElementById("displayNameInput");
+    const saveDisplayNameBtn = document.getElementById("saveDisplayNameBtn");
+    const newPasswordInput = document.getElementById("newPasswordInput");
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
+    const settingsSuccess = document.getElementById("settingsSuccess");
+    const settingsError = document.getElementById("settingsError");
+
+    // ---------------------------
+    // PROFILE SETTINGS
+    // ---------------------------
+
+    manageFundsBtn.addEventListener("click", () => {
+      const u = getCurrentUser();
+      if (!u) {
+        openAuthModal("signin");
+        return;
+      }
+      alert("In a real app this would open deposit/withdraw options.");
+    });
+
+    saveDisplayNameBtn.addEventListener("click", () => {
+      settingsSuccess.textContent = "";
+      settingsError.textContent = "";
+      const u = getCurrentUser();
+      if (!u) {
+        settingsError.textContent = "You must be signed in to change your display name.";
+        return;
+      }
+      const val = displayNameInput.value.trim();
+      if (!val) {
+        settingsError.textContent = "Display name cannot be empty.";
+        return;
+      }
+      u.displayName = val;
+      setCurrentUserStored(u);
+      settingsSuccess.textContent = "Display name updated.";
+      updateUI();
+    });
+
+    changePasswordBtn.addEventListener("click", () => {
+      settingsSuccess.textContent = "";
+      settingsError.textContent = "";
+      const u = getCurrentUser();
+      if (!u) {
+        settingsError.textContent = "You must be signed in to change your password.";
+        return;
+      }
+      const newPw = newPasswordInput.value;
+      if (!newPw) {
+        settingsError.textContent = "Enter a new password first.";
+        return;
+      }
+      const pwError = validatePassword(newPw);
+      if (pwError) {
+        settingsError.textContent = pwError;
+        return;
+      }
+      u.password = newPw;
+      setCurrentUserStored(u);
+      newPasswordInput.value = "";
+      settingsSuccess.textContent = "Password updated.";
+    });
+
+    // ---------------------------
+    // FORMATTERS
+    // ---------------------------
 
     function formatPrice(value) {
-      if (value < 10) return value.toFixed(4).replace(/\.?0+$/, "");
-      if (value < 1000) return value.toFixed(2).replace(/\.?0+$/, "");
+      if (value < 1) return value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+      if (value < 1000) return value.toFixed(2);
       return value.toFixed(1);
     }
 
+    function formatMoney(v) {
+      return "$" + v.toFixed(2);
+    }
+
+    // ---------------------------
+    // BINANCE FETCHES
+    // ---------------------------
+
+    async function fetchTickers() {
+      const symbols = MARKETS.map((m) => m.id);
+      const param = encodeURIComponent(JSON.stringify(symbols));
+      const url = `${BINANCE_BASE}/api/v3/ticker/24hr?symbols=${param}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      data.forEach((t) => {
+        const m = MARKETS.find((x) => x.id === t.symbol);
+        if (!m) return;
+        m.lastPrice = parseFloat(t.lastPrice);
+        m.change24h = parseFloat(t.priceChangePercent);
+      });
+    }
+
+    async function fetchCandles(symbol, interval, limit = 200) {
+      const url = `${BINANCE_BASE}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.map((k) => parseFloat(k[4])); // close price
+    }
+
+    async function seedAllCandlesForBoard() {
+      const promises = MARKETS.map(async (m) => {
+        try {
+          m.candles = await fetchCandles(m.id, "1h", 80);
+        } catch {
+          // ignore
+        }
+      });
+      await Promise.all(promises);
+    }
+
+    // ---------------------------
+    // HERO CHART & TIMEFRAME
+    // ---------------------------
+
+    const heroCanvas = document.getElementById("heroChartCanvas");
+    const heroAssetNameEl = document.getElementById("heroAssetName");
+    const heroAssetSymbolEl = document.getElementById("heroAssetSymbol");
+    const heroPriceEl = document.getElementById("assetPrice");
+    const heroChangeEl = document.getElementById("assetChange");
+    const heroFooterInfo = document.getElementById("heroFooterInfo");
+    const heroTFButtons = document.getElementById("heroTimeframeButtons");
+
+    let heroMarketId = MARKETS[0].id;
+    let heroCandles = [];
+    let heroTimeframe = "1D";
+
+    const HERO_TF_TO_BINANCE = {
+      "1D": "15m",
+      "1W": "1h",
+      "1M": "4h",
+      "6M": "1d",
+      "1Y": "1w"
+    };
+
+    function getHeroMarket() {
+      return MARKETS.find((m) => m.id === heroMarketId) || MARKETS[0];
+    }
+
+    async function refreshHeroCandles() {
+      const m = getHeroMarket();
+      const interval = HERO_TF_TO_BINANCE[heroTimeframe] || "15m";
+      try {
+        heroCandles = await fetchCandles(m.id, interval, 150);
+      } catch {
+        heroCandles = [];
+      }
+      drawHeroChart();
+    }
+
+    function drawLineChart(canvas, data, colorUp, colorDown) {
+      if (!canvas || !data || data.length < 2) return;
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const min = Math.min(...data);
+      const max = Math.max(...data);
+      const range = max - min || 1;
+      const step = w / (data.length - 1);
+
+      const lastChange = data[data.length - 1] - data[0];
+      const stroke = lastChange >= 0 ? colorUp : colorDown;
+
+      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = stroke;
+      ctx.beginPath();
+      data.forEach((v, i) => {
+        const x = i * step;
+        const y = h - ((v - min) / range) * (h * 0.9) - h * 0.05;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, stroke + "55");
+      grad.addColorStop(1, "transparent");
+
+      ctx.fillStyle = grad;
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawHeroChart() {
+      const m = getHeroMarket();
+      if (!heroCandles || heroCandles.length < 2) return;
+      const data = heroCandles;
+      const lastPrice = data[data.length - 1];
+      const changePct = ((lastPrice - data[0]) / data[0]) * 100;
+      const sign = changePct >= 0 ? "+" : "";
+      heroPriceEl.textContent = formatPrice(lastPrice);
+      heroChangeEl.textContent = `${sign}${changePct.toFixed(2)}% (period)`;
+      heroChangeEl.classList.toggle("negative", changePct < 0);
+
+      heroAssetNameEl.textContent = m.name;
+      heroAssetSymbolEl.textContent = `${m.symbol} · Binance spot`;
+      heroFooterInfo.textContent = `Interval ${
+        HERO_TF_TO_BINANCE[heroTimeframe] || "15m"
+      } · candles from Binance.`;
+
+      drawLineChart(heroCanvas, data, "#25d586", "#ff6b6b");
+    }
+
+    heroTFButtons.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-tf]");
+      if (!btn) return;
+      heroTimeframe = btn.dataset.tf;
+      heroTFButtons.querySelectorAll("button").forEach((b) =>
+        b.classList.toggle("active", b === btn)
+      );
+      refreshHeroCandles();
+    });
+
+    function selectMostVolatileHeroMarket() {
+      const sorted = [...MARKETS].sort(
+        (a, b) => Math.abs(b.change24h || 0) - Math.abs(a.change24h || 0)
+      );
+      heroMarketId = (sorted[0] && sorted[0].id) || MARKETS[0].id;
+      refreshHeroCandles();
+    }
+
+    // ---------------------------
+    // POPULAR MARKETS, BOARD & TICKER
+    // ---------------------------
+
     function getMostVolatileMarkets(count) {
       const sorted = [...MARKETS].sort(
-        (a, b) => Math.abs(b.change || 0) - Math.abs(a.change || 0)
+        (a, b) => Math.abs(b.change24h || 0) - Math.abs(a.change24h || 0)
       );
       return sorted.slice(0, count);
     }
@@ -2174,14 +2355,14 @@
         row.innerHTML = `
           <div class="market-name">
             <span>${m.name}</span>
-            <span class="market-symbol">${m.symbol} · ${m.type}</span>
+            <span class="market-symbol">${m.symbol}</span>
           </div>
           <div>
-            <span class="market-price" data-price="${m.id}">${formatPrice(m.price)}</span>
-            <div class="market-spread">Spread ${m.spread}</div>
+            <span class="market-price" data-price="${m.id}">${formatPrice(m.lastPrice)}</span>
+            <div class="market-spread">24h change</div>
           </div>
-          <div class="market-change ${m.change >= 0 ? "positive" : "negative"}" data-change="${m.id}">
-            ${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%
+          <div class="market-change ${m.change24h >= 0 ? "positive" : "negative"}" data-change="${m.id}">
+            ${m.change24h >= 0 ? "+" : ""}${(m.change24h || 0).toFixed(2)}%
           </div>
           <div class="market-actions">
             <button class="btn-buy" data-market="${m.id}">Buy</button>
@@ -2192,29 +2373,25 @@
       });
 
       marketsListEl.querySelectorAll(".btn-buy").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-market");
-          openTradeModal(id);
-        });
+        btn.addEventListener("click", () => openTradeModal(btn.dataset.market));
       });
-
       marketsListEl.querySelectorAll(".btn-sell").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-market-sell");
-          openSellModal(id);
-        });
+        btn.addEventListener("click", () => openSellModal(btn.dataset["marketSell"]));
       });
     }
 
-    function getFilteredMarkets() {
+    let marketsFilter = "all";
+
+    function filteredMarkets() {
       if (marketsFilter === "all") return [...MARKETS];
       if (marketsFilter === "volatile") return getMostVolatileMarkets(9);
-      return MARKETS.filter((m) => m.category === marketsFilter);
+      if (marketsFilter === "crypto") return MARKETS.filter((m) => m.category === "crypto");
+      return [...MARKETS];
     }
 
     function renderMarketsPage() {
       marketsPageGrid.innerHTML = "";
-      const list = getFilteredMarkets();
+      const list = filteredMarkets();
       list.forEach((m) => {
         const card = document.createElement("div");
         card.className = "market-card";
@@ -2222,12 +2399,12 @@
           <div class="market-card-header">
             <div>
               <div class="market-card-name">${m.name}</div>
-              <div class="market-card-symbol">${m.symbol} · ${m.type}</div>
+              <div class="market-card-symbol">${m.symbol}</div>
             </div>
             <div style="text-align:right;">
-              <div class="market-card-price" data-price="${m.id}-page">${formatPrice(m.price)}</div>
-              <div class="market-card-change ${m.change >= 0 ? "positive" : "negative"}" data-change="${m.id}-page">
-                ${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%
+              <div class="market-card-price" data-price="${m.id}-page">${formatPrice(m.lastPrice)}</div>
+              <div class="market-card-change ${m.change24h >= 0 ? "positive" : "negative"}" data-change="${m.id}-page">
+                ${m.change24h >= 0 ? "+" : ""}${(m.change24h || 0).toFixed(2)}%
               </div>
             </div>
           </div>
@@ -2243,17 +2420,10 @@
       });
 
       marketsPageGrid.querySelectorAll(".btn-buy").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-market");
-          openTradeModal(id);
-        });
+        btn.addEventListener("click", () => openTradeModal(btn.dataset.market));
       });
-
       marketsPageGrid.querySelectorAll(".btn-sell").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-market-sell");
-          openSellModal(id);
-        });
+        btn.addEventListener("click", () => openSellModal(btn.dataset["marketSell"]));
       });
 
       drawAllSparklines();
@@ -2263,8 +2433,7 @@
       const pill = e.target.closest(".pill");
       if (!pill) return;
       const filter = pill.dataset.filter;
-      if (pill.classList.contains("active")) {
-        // clicking active again -> reset to all
+      if (filtersSame(filter)) {
         marketsFilter = "all";
       } else {
         marketsFilter = filter;
@@ -2272,8 +2441,24 @@
       marketsFilters.querySelectorAll(".pill").forEach((p) =>
         p.classList.toggle("active", p.dataset.filter === marketsFilter)
       );
+      if (marketsFilter === "all") {
+        marketsFilters.querySelector('[data-filter="all"]').classList.add("active");
+      }
       renderMarketsPage();
     });
+
+    function filtersSame(filter) {
+      return marketsFilter === filter;
+    }
+
+    function drawAllSparklines() {
+      MARKETS.forEach((m) => {
+        const canvas = document.querySelector(`canvas[data-canvas="${m.id}"]`);
+        if (!canvas || !m.candles || m.candles.length < 2) return;
+        const slice = m.candles.slice(-60);
+        drawLineChart(canvas, slice, "#25d586", "#ff6b6b");
+      });
+    }
 
     function renderTicker() {
       tickerTrack.innerHTML = "";
@@ -2284,9 +2469,9 @@
           item.className = "ticker-item";
           item.innerHTML = `
             <span class="ticker-symbol">${m.symbol}</span>
-            <span class="ticker-price">${formatPrice(m.price)}</span>
-            <span class="ticker-change ${m.change >= 0 ? "positive" : "negative"}">
-              ${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%
+            <span class="ticker-price">${formatPrice(m.lastPrice)}</span>
+            <span class="ticker-change ${m.change24h >= 0 ? "positive" : "negative"}">
+              ${m.change24h >= 0 ? "+" : ""}${(m.change24h || 0).toFixed(2)}%
             </span>
           `;
           tickerTrack.appendChild(item);
@@ -2314,15 +2499,13 @@
 
     function openTradeModal(marketId) {
       const baseUser = getCurrentUser();
-      if (!baseUser && mode === "normal") {
+      if (!baseUser) {
         openAuthModal("signin");
         return;
       }
       const state = getActiveState();
-      if (!state) {
-        openAuthModal("signin");
-        return;
-      }
+      if (!state) return;
+
       currentTradeMarket = MARKETS.find((m) => m.id === marketId);
       if (!currentTradeMarket) return;
 
@@ -2334,7 +2517,7 @@
         You are placing a <strong>BUY</strong> order on
         <strong>${currentTradeMarket.name} (${currentTradeMarket.symbol})</strong>.
       `;
-      tradePriceEl.textContent = formatPrice(currentTradeMarket.price);
+      tradePriceEl.textContent = formatPrice(currentTradeMarket.lastPrice);
       tradeSymbolSummary.textContent = currentTradeMarket.symbol;
 
       updateTradeCalculations();
@@ -2367,7 +2550,7 @@
       tradeQtyInput.value = qty;
       tradeQtySummary.textContent = qty;
 
-      const price = currentTradeMarket.price;
+      const price = currentTradeMarket.lastPrice;
       const notional = qty * price;
       const marginRequired = notional * 0.05;
       tradeMarginEl.textContent = "$" + marginRequired.toFixed(2);
@@ -2384,7 +2567,7 @@
         return;
       }
       const qty = Math.max(1, parseInt(tradeQtyInput.value || "1", 10));
-      const price = currentTradeMarket.price;
+      const price = currentTradeMarket.lastPrice;
       const notional = qty * price;
       const marginRequired = notional * 0.05;
 
@@ -2438,15 +2621,13 @@
 
     function openSellModal(marketId) {
       const baseUser = getCurrentUser();
-      if (!baseUser && mode === "normal") {
+      if (!baseUser) {
         openAuthModal("signin");
         return;
       }
       const state = getActiveState();
-      if (!state) {
-        openAuthModal("signin");
-        return;
-      }
+      if (!state) return;
+
       currentSellMarket = MARKETS.find((m) => m.id === marketId);
       if (!currentSellMarket) return;
 
@@ -2462,7 +2643,7 @@
         You are closing <strong>BUY</strong> positions on
         <strong>${currentSellMarket.name} (${currentSellMarket.symbol})</strong>.
       `;
-      sellPriceEl.textContent = formatPrice(currentSellMarket.price);
+      sellPriceEl.textContent = formatPrice(currentSellMarket.lastPrice);
       sellTotalQtyEl.textContent = totalQty;
       sellSymbolSummary.textContent = currentSellMarket.symbol;
       sellQtySummary.textContent = totalQty;
@@ -2518,7 +2699,7 @@
       let remainingToClose = qtyToClose;
       let marginReleased = 0;
       let pnl = 0;
-      const currentPrice = currentSellMarket.price;
+      const currentPrice = currentSellMarket.lastPrice;
       const newPositions = [];
 
       for (const p of state.positions) {
@@ -2530,14 +2711,14 @@
         const notional = p.price * closeQty;
         const delta = (currentPrice - p.price) / p.price;
         pnl += notional * delta;
-        const positionMarginPerUnit = p.margin / p.qty;
-        marginReleased += positionMarginPerUnit * closeQty;
+        const marginPerUnit = p.margin / p.qty;
+        marginReleased += marginPerUnit * closeQty;
 
         if (closeQty < p.qty) {
           newPositions.push({
             ...p,
             qty: p.qty - closeQty,
-            margin: p.margin - positionMarginPerUnit * closeQty
+            margin: p.margin - marginPerUnit * closeQty
           });
         }
         remainingToClose -= closeQty;
@@ -2568,74 +2749,19 @@
     // ACCOUNT & PROFILE UI
     // ---------------------------
 
-    const kpiBalance = document.getElementById("kpiBalance");
-    const kpiToday = document.getElementById("kpiToday");
-    const kpiPnL = document.getElementById("kpiPnL");
-    const kpiOvernight = document.getElementById("kpiOvernight");
-
-    const equityValue = document.getElementById("equityValue");
-    const availableMarginValue = document.getElementById("availableMarginValue");
-    const usedMarginValue = document.getElementById("usedMarginValue");
-
-    const riskUsageLabel = document.getElementById("riskUsageLabel");
-    const riskUsageFill = document.getElementById("riskUsageFill");
-    const avgLeverage = document.getElementById("avgLeverage");
-    const riskStatusText = document.getElementById("riskStatusText");
-    const accountTypeLabel = document.getElementById("accountTypeLabel");
-    const manageFundsBtn = document.getElementById("manageFundsBtn");
-
-    const profileSubtitle = document.getElementById("profileSubtitle");
-    const profileGuestHint = document.getElementById("profileGuestHint");
-    const profileOverviewDetails = document.getElementById("profileOverviewDetails");
-    const profileDisplayName = document.getElementById("profileDisplayName");
-    const profileEmail = document.getElementById("profileEmail");
-    const profileBalance = document.getElementById("profileBalance");
-    const profileOpenPositions = document.getElementById("profileOpenPositions");
-    const profileUsedMargin = document.getElementById("profileUsedMargin");
-    const profileRiskUsage = document.getElementById("profileRiskUsage");
-    const profileSessions = document.getElementById("profileSessions");
-    const profileTrades = document.getElementById("profileTrades");
-
-    const modeNormalBtn = document.getElementById("modeNormalBtn");
-    const modeTestBtn = document.getElementById("modeTestBtn");
-    const modeDescription = document.getElementById("modeDescription");
-    const displayNameInput = document.getElementById("displayNameInput");
-    const saveDisplayNameBtn = document.getElementById("saveDisplayNameBtn");
-    const newPasswordInput = document.getElementById("newPasswordInput");
-    const changePasswordBtn = document.getElementById("changePasswordBtn");
-    const settingsSuccess = document.getElementById("settingsSuccess");
-    const settingsError = document.getElementById("settingsError");
-
-    manageFundsBtn.addEventListener("click", () => {
-      const baseUser = getCurrentUser();
-      if (!baseUser && mode === "normal") {
-        openAuthModal("signin");
-        return;
-      }
-      alert("In a live environment this would open deposit/withdraw options.");
-    });
-
-    function formatMoney(v) {
-      return "$" + v.toFixed(2);
-    }
-
     function updateProfileSection() {
       const baseUser = getCurrentUser();
       const state = getActiveState();
 
       if (!baseUser) {
         profileSubtitle.textContent =
-          "Connect an account to start building your OrangeVest profile: balances, positions and simple session statistics appear here.";
+          "Connect an account to keep balances, open trades and simple statistics attached to your profile.";
         profileGuestHint.style.display = "block";
         profileOverviewDetails.style.display = "none";
         return;
       }
 
-      profileSubtitle.textContent =
-        mode === "test"
-          ? "Test mode: changes do not persist. Use this sandbox to experiment freely."
-          : "Your current OrangeVest session at a glance.";
-
+      profileSubtitle.textContent = "Your current OrangeVest session at a glance.";
       profileGuestHint.style.display = "none";
       profileOverviewDetails.style.display = "block";
 
@@ -2654,153 +2780,6 @@
       profileTrades.textContent = (state.history || []).length;
 
       displayNameInput.value = baseUser.displayName || "";
-    }
-
-    function updateModeUI() {
-      modeNormalBtn.classList.toggle("active", mode === "normal");
-      modeTestBtn.classList.toggle("active", mode === "test");
-      modeDescription.textContent =
-        mode === "normal"
-          ? "Normal: starting balance $100, trades and balance are saved to your profile."
-          : "Test: balance $1,000,000, trades and balance reset when you reload.";
-    }
-
-    modeNormalBtn.addEventListener("click", () => {
-      mode = "normal";
-      testState = null;
-      updateModeUI();
-      updateUI();
-    });
-
-    modeTestBtn.addEventListener("click", () => {
-      mode = "test";
-      testState = createEmptyState(TEST_START_BALANCE);
-      updateModeUI();
-      updateUI();
-    });
-
-    saveDisplayNameBtn.addEventListener("click", () => {
-      settingsSuccess.textContent = "";
-      settingsError.textContent = "";
-      const baseUser = getCurrentUser();
-      if (!baseUser) {
-        settingsError.textContent = "You must be signed in to change your display name.";
-        return;
-      }
-      const val = displayNameInput.value.trim();
-      if (!val) {
-        settingsError.textContent = "Display name cannot be empty.";
-        return;
-      }
-      baseUser.displayName = val;
-      setCurrentUserStored(baseUser);
-      settingsSuccess.textContent = "Display name updated.";
-      updateUI();
-    });
-
-    changePasswordBtn.addEventListener("click", () => {
-      settingsSuccess.textContent = "";
-      settingsError.textContent = "";
-      const baseUser = getCurrentUser();
-      if (!baseUser) {
-        settingsError.textContent = "You must be signed in to change your password.";
-        return;
-      }
-      const newPw = newPasswordInput.value;
-      if (!newPw) {
-        settingsError.textContent = "Enter a new password first.";
-        return;
-      }
-      const pwError = validatePassword(newPw);
-      if (pwError) {
-        settingsError.textContent = pwError;
-        return;
-      }
-      baseUser.password = newPw;
-      setCurrentUserStored(baseUser);
-      newPasswordInput.value = "";
-      settingsSuccess.textContent = "Password updated.";
-    });
-
-    function updateUI() {
-      const baseUser = getCurrentUser();
-      const state = getActiveState();
-
-      if (!baseUser && mode === "normal") {
-        navUser.innerHTML = `<span>Guest</span>`;
-        btnLogin.style.display = "inline-flex";
-        btnLogout.style.display = "none";
-        accountTypeLabel.textContent = "Guest · Connect to start tracking";
-        kpiBalance.textContent = formatMoney(NORMAL_START_BALANCE);
-        kpiToday.textContent = "+ $0.00 today";
-        kpiToday.classList.remove("negative");
-        kpiPnL.textContent = "$0.00";
-        kpiOvernight.textContent = "– $0.00 overnight";
-        equityValue.textContent = "$0.00";
-        availableMarginValue.textContent = "$0.00";
-        usedMarginValue.textContent = "$0.00";
-        riskUsageLabel.textContent = "0%";
-        riskUsageFill.style.width = "0%";
-        riskStatusText.textContent = "No account connected";
-        avgLeverage.textContent = "1 : 0";
-        renderPositions(null);
-        updateProfileSection();
-        return;
-      }
-
-      // active state exists in both normal and test
-      if (baseUser) {
-        navUser.innerHTML = `Signed in as <span>${baseUser.displayName || baseUser.email}</span>`;
-        btnLogin.style.display = "none";
-        btnLogout.style.display = "inline";
-      } else {
-        // test mode with no stored user – treat as "Test guest"
-        navUser.innerHTML = `<span>Test mode</span>`;
-        btnLogin.style.display = "inline-flex";
-        btnLogout.style.display = "none";
-      }
-
-      const equity = state.balance;
-      const usedMargin = state.usedMargin;
-      const freeMargin = Math.max(0, equity - usedMargin);
-
-      accountTypeLabel.textContent =
-        mode === "test" ? "Test mode · Not saved" : baseUser ? "Profile · Connected" : "Guest";
-
-      kpiBalance.textContent = formatMoney(state.balance);
-      kpiToday.textContent = "+ $0.00 today";
-      kpiToday.classList.remove("negative");
-      kpiPnL.textContent = "$0.00";
-      kpiOvernight.textContent = "– $0.00 overnight";
-
-      equityValue.textContent = formatMoney(equity);
-      availableMarginValue.textContent = formatMoney(freeMargin);
-      usedMarginValue.textContent = formatMoney(usedMargin);
-
-      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
-      riskUsageLabel.textContent = riskUsage.toFixed(0) + "%";
-      riskUsageFill.style.width = Math.min(100, riskUsage).toFixed(0) + "%";
-
-      let avgLev = 0;
-      if (state.positions.length > 0) {
-        const totalNotional = state.positions.reduce((acc, p) => acc + p.qty * p.price, 0);
-        avgLev = totalNotional / equity;
-      }
-      avgLeverage.textContent = "1 : " + avgLev.toFixed(1);
-
-      if (state.positions.length === 0) {
-        riskStatusText.textContent = "No open positions";
-      } else if (riskUsage < 30) {
-        riskStatusText.textContent = "Low risk usage";
-      } else if (riskUsage < 60) {
-        riskStatusText.textContent = "Moderate risk usage";
-      } else {
-        riskStatusText.textContent = "High risk usage";
-      }
-
-      renderPositions(state);
-      updateProfileSection();
-      updateModeUI();
     }
 
     function renderPositions(state) {
@@ -2842,220 +2821,106 @@
       });
     }
 
-    // ---------------------------
-    // CHART UTIL
-    // ---------------------------
+    function updateUI() {
+      const baseUser = getCurrentUser();
+      const state = getActiveState();
 
-    function drawLineChart(canvas, data, colorUp, colorDown) {
-      if (!canvas || !data || data.length < 2) return;
-      const ctx = canvas.getContext("2d");
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!baseUser) {
+        navUser.innerHTML = `<span>Guest</span>`;
+        btnLogin.style.display = "inline-flex";
+        btnLogout.style.display = "none";
+        accountTypeLabel.textContent = "Guest · Connect to start tracking";
+        kpiBalance.textContent = formatMoney(NORMAL_START_BALANCE);
+        kpiToday.textContent = "+ $0.00 today";
+        kpiToday.classList.remove("negative");
+        kpiPnL.textContent = "$0.00";
+        kpiOvernight.textContent = "– $0.00 overnight";
+        equityValue.textContent = "$0.00";
+        availableMarginValue.textContent = "$0.00";
+        usedMarginValue.textContent = "$0.00";
+        riskUsageLabel.textContent = "0%";
+        riskUsageFill.style.width = "0%";
+        riskStatusText.textContent = "No account connected";
+        avgLeverage.textContent = "1 : 0";
+        renderPositions(null);
+        updateProfileSection();
+        return;
+      }
 
-      const w = rect.width;
-      const h = rect.height;
-      ctx.clearRect(0, 0, w, h);
+      navUser.innerHTML = `Signed in as <span>${baseUser.displayName || baseUser.email}</span>`;
+      btnLogin.style.display = "none";
+      btnLogout.style.display = "inline";
 
-      const min = Math.min(...data);
-      const max = Math.max(...data);
-      const range = max - min || 1;
-      const step = w / (data.length - 1);
+      const equity = state.balance;
+      const usedMargin = state.usedMargin;
+      const freeMargin = Math.max(0, equity - usedMargin);
 
-      const lastChange = data[data.length - 1] - data[0];
-      const stroke = lastChange >= 0 ? colorUp : colorDown;
+      accountTypeLabel.textContent = "Profile · Connected";
 
-      ctx.lineWidth = 1.6;
-      ctx.strokeStyle = stroke;
-      ctx.beginPath();
-      data.forEach((v, i) => {
-        const x = i * step;
-        const y = h - ((v - min) / range) * (h * 0.9) - h * 0.05;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
+      kpiBalance.textContent = formatMoney(state.balance);
+      kpiToday.textContent = "+ $0.00 today";
+      kpiToday.classList.remove("negative");
+      kpiPnL.textContent = "$0.00";
+      kpiOvernight.textContent = "– $0.00 overnight";
 
-      const grad = ctx.createLinearGradient(0, 0, 0, h);
-      grad.addColorStop(0, stroke + "55");
-      grad.addColorStop(1, "transparent");
+      equityValue.textContent = formatMoney(equity);
+      availableMarginValue.textContent = formatMoney(freeMargin);
+      usedMarginValue.textContent = formatMoney(usedMargin);
 
-      ctx.fillStyle = grad;
-      ctx.lineTo(w, h);
-      ctx.lineTo(0, h);
-      ctx.closePath();
-      ctx.fill();
+      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
+      riskUsageLabel.textContent = riskUsage.toFixed(0) + "%";
+      riskUsageFill.style.width = Math.min(100, riskUsage).toFixed(0) + "%";
+
+      let avgLev = 0;
+      if (state.positions.length > 0) {
+        const totalNotional = state.positions.reduce((acc, p) => acc + p.qty * p.price, 0);
+        avgLev = totalNotional / equity;
+      }
+      avgLeverage.textContent = "1 : " + avgLev.toFixed(1);
+
+      if (state.positions.length === 0) {
+        riskStatusText.textContent = "No open positions";
+      } else if (riskUsage < 30) {
+        riskStatusText.textContent = "Low risk usage";
+      } else if (riskUsage < 60) {
+        riskStatusText.textContent = "Moderate risk usage";
+      } else {
+        riskStatusText.textContent = "High risk usage";
+      }
+
+      renderPositions(state);
+      updateProfileSection();
     }
 
     // ---------------------------
-    // HERO MARKET & TIMEFRAMES
+    // MARKET TICK LOOP
     // ---------------------------
 
-    const heroCanvas = document.getElementById("heroChartCanvas");
-    const heroAssetNameEl = document.getElementById("heroAssetName");
-    const heroAssetSymbolEl = document.getElementById("heroAssetSymbol");
-    const heroPriceEl = document.getElementById("assetPrice");
-    const heroChangeEl = document.getElementById("assetChange");
-    const heroFooterInfo = document.getElementById("heroFooterInfo");
-    const heroTFButtons = document.getElementById("heroTimeframeButtons");
-
-    let heroMarketId = null;
-    let heroTimeframe = "1D";
-
-    function heroSliceForTimeframe(history) {
-      const len = history.length;
-      if (len < 2) return history;
-      // Just different zooms over same recent window
-      const map = {
-        "1D": 40,
-        "1W": 60,
-        "1M": 80,
-        "6M": 100,
-        "1Y": 120
-      };
-      const target = map[heroTimeframe] || 40;
-      return history.slice(-Math.min(target, len));
-    }
-
-    function selectMostVolatileHeroMarket() {
-      const sorted = [...MARKETS].sort(
-        (a, b) => Math.abs(b.change || 0) - Math.abs(a.change || 0)
-      );
-      heroMarketId = (sorted[0] && sorted[0].id) || MARKETS[0].id;
-      updateHeroMeta();
-      drawHeroChart();
-    }
-
-    function getHeroMarket() {
-      return MARKETS.find((m) => m.id === heroMarketId) || MARKETS[0];
-    }
-
-    function updateHeroMeta() {
-      const m = getHeroMarket();
-      heroAssetNameEl.textContent = m.name;
-      heroAssetSymbolEl.textContent = `${m.symbol} · ${m.type}`;
-      heroFooterInfo.textContent = `Spread ${m.spread} · Movement ${
-        (m.change || 0).toFixed(2)
-      }% over recent candles.`;
-    }
-
-    function drawHeroChart() {
-      const m = getHeroMarket();
-      const data = m.history;
-      if (!data || data.length < 2) return;
-      const sliced = heroSliceForTimeframe(data);
-
-      const lastPrice = sliced[sliced.length - 1];
-      const dayChange = ((lastPrice - sliced[0]) / sliced[0]) * 100;
-      const sign = dayChange >= 0 ? "+" : "";
-      heroPriceEl.textContent = lastPrice.toFixed(2);
-      heroChangeEl.textContent = `${sign}${dayChange.toFixed(2)}% (day)`;
-      heroChangeEl.classList.toggle("negative", dayChange < 0);
-
-      drawLineChart(heroCanvas, sliced, "#25d586", "#ff6b6b");
-    }
-
-    heroTFButtons.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-tf]");
-      if (!btn) return;
-      heroTimeframe = btn.dataset.tf;
-      heroTFButtons.querySelectorAll("button").forEach((b) =>
-        b.classList.toggle("active", b === btn)
-      );
-      drawHeroChart();
-    });
-
-    function setupHeroSelection() {
-      selectMostVolatileHeroMarket();
-      const oneHour = 60 * 60 * 1000;
-      setInterval(selectMostVolatileHeroMarket, oneHour);
-    }
-
-    // ---------------------------
-    // MINI MARKET CHARTS & TICKS
-    // ---------------------------
-
-    function seedHistories() {
-      MARKETS.forEach((m) => {
-        if (!m.history || !m.history.length) {
-          m.history = [];
-          let base = m.price;
-          for (let i = 0; i < 60; i++) {
-            base *= 1 + (Math.random() - 0.5) * 0.01;
-            m.history.push(base);
-          }
-        }
-      });
-    }
-
-    function updateMarketHistory() {
-      MARKETS.forEach((m) => {
-        if (!m.history) m.history = [];
-        const last = m.history.length ? m.history[m.history.length - 1] : m.price;
-        const drift =
-          m.category === "crypto"
-            ? 0.004
-            : m.category === "stocks"
-            ? 0.002
-            : m.id === "oil"
-            ? 0.0025
-            : 0.0015;
-        const vol =
-          m.category === "crypto"
-            ? 0.015
-            : m.category === "stocks"
-            ? 0.01
-            : m.id === "oil"
-            ? 0.012
-            : 0.008;
-
-        const move = last * (drift + (Math.random() - 0.5) * vol);
-        const next = Math.max(0.0001, last + move);
-        m.history.push(next);
-        if (m.history.length > 120) m.history.shift();
-        m.price = next;
-        const rel = (m.price - m.history[0]) / m.history[0];
-        m.change = rel * 100;
-      });
-    }
-
-    function drawAllSparklines() {
-      MARKETS.forEach((m) => {
-        const canvas = document.querySelector(`canvas[data-canvas="${m.id}"]`);
-        if (!canvas) return;
-        const slice = m.history.slice(-40);
-        drawLineChart(canvas, slice, "#25d586", "#ff6b6b");
-      });
-    }
-
-    function updateMarketDisplays() {
-      renderPopularMarketsSidebar();
-      renderMarketsPage();
-      renderTicker();
-      updateHeroMeta();
-      drawHeroChart();
-    }
-
-    function tickMarkets() {
-      updateMarketHistory();
-      updateMarketDisplays();
+    async function refreshMarketData() {
+      try {
+        await fetchTickers();
+        renderPopularMarketsSidebar();
+        renderMarketsPage();
+        renderTicker();
+        selectMostVolatileHeroMarket();
+      } catch {
+        // ignore network errors for now
+      }
     }
 
     // ---------------------------
     // INIT
     // ---------------------------
 
-    function init() {
-      seedHistories();
-      renderPopularMarketsSidebar();
-      renderMarketsPage();
-      renderTicker();
-      setupHeroSelection();
-      updateModeUI();
+    async function init() {
+      // Initial data from Binance
+      await refreshMarketData();
+      await seedAllCandlesForBoard();
+      drawAllSparklines();
       updateUI();
-      setInterval(tickMarkets, 2600);
+
+      // Periodic refresh for prices/24h stats
+      setInterval(refreshMarketData, 20000);
     }
 
     init();
