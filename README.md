@@ -39,11 +39,6 @@
       text-decoration: none;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
     .page {
       max-width: 1200px;
       margin: 0 auto;
@@ -114,18 +109,23 @@
       color: var(--text-muted);
     }
 
-    .nav-links a {
-      padding: 6px 8px;
+    .nav-links button {
+      padding: 6px 10px;
       border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
       transition: color 0.2s ease, background 0.2s ease;
+      font-size: 14px;
     }
 
-    .nav-links a:hover {
+    .nav-links button:hover {
       color: var(--text-main);
       background: rgba(255, 255, 255, 0.04);
     }
 
-    .nav-links a.active {
+    .nav-links button.active {
       color: var(--accent);
       background: var(--accent-soft);
     }
@@ -172,11 +172,6 @@
     .btn-primary:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    }
-
-    .btn-small {
-      padding: 6px 12px;
-      font-size: 12px;
     }
 
     .btn-text {
@@ -474,7 +469,7 @@
 
     .market-row {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 0.9fr 0.8fr;
+      grid-template-columns: 1.5fr 1fr 0.9fr 0.9fr;
       align-items: center;
       padding: 8px 10px;
       background: rgba(7, 11, 20, 0.9);
@@ -535,8 +530,6 @@
 
     .btn-sell {
       background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
-      opacity: 0.4;
-      cursor: not-allowed;
     }
 
     .balance-row {
@@ -717,7 +710,17 @@
       opacity: 0.85;
     }
 
-    /* Auth modal */
+    /* Auth */
+
+    .auth-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .auth-hint span {
+      color: var(--accent);
+      font-weight: 500;
+    }
 
     .backdrop {
       position: fixed;
@@ -821,6 +824,13 @@
       box-shadow: 0 0 0 1px rgba(30, 204, 124, 0.5);
     }
 
+    .modal-error {
+      font-size: 11px;
+      color: var(--danger);
+      min-height: 14px;
+      margin-top: 4px;
+    }
+
     .modal-footer {
       display: flex;
       justify-content: space-between;
@@ -828,13 +838,6 @@
       margin-top: 10px;
       font-size: 11px;
       color: var(--text-muted);
-    }
-
-    .modal-error {
-      font-size: 11px;
-      color: var(--danger);
-      min-height: 14px;
-      margin-top: 4px;
     }
 
     /* Trade modal */
@@ -928,10 +931,12 @@
 
     .position-row {
       display: grid;
-      grid-template-columns: 1.7fr 0.8fr 0.9fr 0.7fr;
+      grid-template-columns: 1.7fr 0.8fr 0.9fr 0.8fr 0.6fr;
       padding: 6px 8px;
       background: rgba(4, 10, 18, 0.96);
       border-bottom: 1px solid rgba(11, 18, 30, 0.9);
+      align-items: center;
+      gap: 4px;
     }
 
     .position-row:nth-child(even) {
@@ -953,16 +958,190 @@
       font-size: 11px;
     }
 
-    /* Auth hint badge */
+    .pos-sell-btn {
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
+      color: #fff;
+      font-size: 10px;
+      padding: 3px 8px;
+      cursor: pointer;
+    }
 
-    .auth-hint {
+    /* Secondary sections */
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .markets-page-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .market-card {
+      background: linear-gradient(150deg, #050a11, #0c1320);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 12px 10px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+      font-size: 12px;
+    }
+
+    .market-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .market-card-name {
+      font-weight: 600;
+    }
+
+    .market-card-symbol {
       font-size: 11px;
       color: var(--text-muted);
     }
 
-    .auth-hint span {
+    .market-card-price {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .market-card-change {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      margin-top: 2px;
+      display: inline-block;
+    }
+
+    .market-card-change.positive {
       color: var(--accent);
-      font-weight: 500;
+      background: rgba(30, 204, 124, 0.1);
+    }
+
+    .market-card-change.negative {
+      color: var(--danger);
+      background: rgba(255, 92, 92, 0.12);
+    }
+
+    .market-card-chart {
+      margin-top: 6px;
+      position: relative;
+      height: 80px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      background: radial-gradient(circle at top left, rgba(30, 204, 124, 0.1), transparent 60%),
+        #050910;
+    }
+
+    .market-card-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to top, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 26px 26px;
+      opacity: 0.3;
+    }
+
+    .market-card-line {
+      position: absolute;
+      inset: 10px 4px 10px;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      background:
+        linear-gradient(120deg, rgba(30, 204, 124, 0.1), transparent 40% 70%, rgba(255, 92, 92, 0.08)) border-box,
+        radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.23), transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(30, 204, 124, 0.6), transparent 50%),
+        radial-gradient(circle at 90% 20%, rgba(255, 92, 92, 0.6), transparent 50%);
+      transform-origin: center;
+    }
+
+    .markets-page-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .info-box {
+      background: rgba(4, 10, 18, 0.96);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .info-box strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .pricing-grid,
+    .education-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .pricing-card,
+    .education-card {
+      background: rgba(4, 10, 18, 0.96);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 12px 10px;
+      font-size: 12px;
+    }
+
+    .pricing-card h3,
+    .education-card h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .pricing-card p,
+    .education-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .badge-accent {
+      border-color: rgba(30, 204, 124, 0.5);
+      color: var(--accent);
     }
 
     /* Responsive */
@@ -1012,8 +1191,8 @@
         width: 100%;
       }
 
-      .nav-cta a,
-      .nav-cta button {
+      .nav-cta button,
+      .nav-cta .btn-ghost {
         flex: 1;
         justify-content: center;
       }
@@ -1031,7 +1210,7 @@
       }
 
       .position-row {
-        grid-template-columns: 1.6fr 0.7fr 0.8fr 0.7fr;
+        grid-template-columns: 1.6fr 0.7fr 0.8fr 0.8fr 0.7fr;
       }
     }
   </style>
@@ -1050,10 +1229,10 @@
 
       <nav>
         <div class="nav-links">
-          <a href="#" class="active">Trading</a>
-          <a href="#">Markets</a>
-          <a href="#">Pricing</a>
-          <a href="#">Education</a>
+          <button data-section="trading" class="active">Trading</button>
+          <button data-section="markets">Markets</button>
+          <button data-section="pricing">Pricing</button>
+          <button data-section="education">Education</button>
         </div>
         <div class="nav-cta">
           <span id="navUser" class="auth-hint"></span>
@@ -1063,207 +1242,292 @@
       </nav>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-grid">
-      <!-- LEFT: HERO & CHART -->
-      <section class="hero-card">
-        <div class="hero-header">
-          <div class="hero-title">
-            <div class="hero-title-badge">
-              <span class="hero-title-badge-dot"></span>
-              Zero-commission demo · Real-time prices
+    <!-- SECTION: TRADING (main) -->
+    <section id="section-trading" class="section active">
+      <main class="main-grid">
+        <!-- LEFT: HERO & CHART -->
+        <div class="hero-card">
+          <div class="hero-header">
+            <div class="hero-title">
+              <div class="hero-title-badge">
+                <span class="hero-title-badge-dot"></span>
+                Zero-commission demo · Real-time prices
+              </div>
+              <h1>Trade global markets with a clean, simple interface.</h1>
+              <p>
+                Practice on a free demo account and explore CFDs on stocks, forex, indices, and crypto on one modern web
+                platform.
+              </p>
             </div>
-            <h1>Trade global markets with a clean, simple interface.</h1>
-            <p>
-              Practice on a free demo account and explore CFDs on stocks, forex, indices, and crypto on one modern web
-              platform.
-            </p>
+
+            <div class="hero-kpis">
+              <div class="kpi">
+                <div class="kpi-label">Demo balance</div>
+                <div class="kpi-value" id="kpiBalance">$50,000.00</div>
+                <div class="kpi-trend" id="kpiToday">+ $0.00 today</div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Open P&L</div>
+                <div class="kpi-value" id="kpiPnL">$0.00</div>
+                <div class="kpi-trend negative" id="kpiOvernight">– $0.00 overnight</div>
+              </div>
+            </div>
           </div>
 
-          <div class="hero-kpis">
-            <div class="kpi">
-              <div class="kpi-label">Demo balance</div>
-              <div class="kpi-value" id="kpiBalance">$50,000.00</div>
-              <div class="kpi-trend" id="kpiToday">+ $0.00 today</div>
+          <article class="chart-card">
+            <div class="chart-header">
+              <div>
+                <div class="asset-name" id="heroAssetName">US Tech 100</div>
+                <div class="asset-symbol" id="heroAssetSymbol">NAS100 · Index CFD</div>
+              </div>
+              <div>
+                <span class="asset-price" id="assetPrice">18,245.12</span>
+                <span class="asset-price-change" id="assetChange">+0.86% (day)</span>
+              </div>
             </div>
-            <div class="kpi">
-              <div class="kpi-label">Open P&L</div>
-              <div class="kpi-value" id="kpiPnL">$0.00</div>
-              <div class="kpi-trend negative" id="kpiOvernight">– $0.00 overnight</div>
+
+            <div class="chart-timeframe">
+              <button class="active">1D</button>
+              <button>1W</button>
+              <button>1M</button>
+              <button>6M</button>
+              <button>1Y</button>
             </div>
-          </div>
+
+            <div class="chart-body">
+              <div class="chart-grid"></div>
+              <div class="chart-line"></div>
+              <div class="chart-glow"></div>
+            </div>
+
+            <div class="chart-footer">
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="dot-buy"></span>
+                  <span>Buy</span>
+                </div>
+                <div class="legend-item">
+                  <span class="dot-sell"></span>
+                  <span>Sell</span>
+                </div>
+              </div>
+              <div>Spread from 0.7 pts · Leverage up to 1:30</div>
+            </div>
+          </article>
         </div>
 
-        <article class="chart-card">
-          <div class="chart-header">
-            <div>
-              <div class="asset-name">US Tech 100</div>
-              <div class="asset-symbol">NAS100 · Index CFD</div>
-            </div>
-            <div>
-              <span class="asset-price" id="assetPrice">18,245.12</span>
-              <span class="asset-price-change" id="assetChange">+0.86% (day)</span>
-            </div>
-          </div>
-
-          <div class="chart-timeframe">
-            <button class="active">1D</button>
-            <button>1W</button>
-            <button>1M</button>
-            <button>6M</button>
-            <button>1Y</button>
-          </div>
-
-          <div class="chart-body">
-            <div class="chart-grid"></div>
-            <div class="chart-line"></div>
-            <div class="chart-glow"></div>
-          </div>
-
-          <div class="chart-footer">
-            <div class="chart-legend">
-              <div class="legend-item">
-                <span class="dot-buy"></span>
-                <span>Buy</span>
+        <!-- RIGHT: MARKETS & ACCOUNT -->
+        <aside class="side-column">
+          <!-- Markets -->
+          <section class="side-card">
+            <div class="side-header">
+              <div>
+                <h2>Popular markets</h2>
+                <span>Tap buy to open a position</span>
               </div>
-              <div class="legend-item">
-                <span class="dot-sell"></span>
-                <span>Sell</span>
+              <button class="btn-text" id="viewAllMarketsBtn" style="color: var(--accent);">View all</button>
+            </div>
+
+            <div class="markets-list" id="marketsList">
+              <!-- Filled by JS -->
+            </div>
+          </section>
+
+          <!-- Account summary -->
+          <section class="side-card">
+            <div class="side-header">
+              <div>
+                <h2>Account overview</h2>
+                <span id="accountTypeLabel">Guest · Demo preview</span>
               </div>
             </div>
-            <div>Spread from 0.7 pts · Leverage up to 1:30</div>
+
+            <div class="balance-row">
+              <span>Equity</span>
+              <span id="equityValue">$0.00</span>
+            </div>
+            <div class="balance-row">
+              <span>Available margin</span>
+              <span id="availableMarginValue">$0.00</span>
+            </div>
+            <div class="balance-row">
+              <span>Used margin</span>
+              <span id="usedMarginValue">$0.00</span>
+            </div>
+
+            <div class="progress-wrap">
+              <div class="progress-label">
+                <span>Risk usage</span>
+                <span id="riskUsageLabel">0%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="riskUsageFill"></div>
+              </div>
+            </div>
+
+            <div class="small-pill">
+              <span>Leverage</span>
+              <strong id="avgLeverage">1 : 0</strong>
+              <span>Avg. on open trades</span>
+            </div>
+
+            <div class="account-footer">
+              <div class="risk-status" id="riskStatus">
+                <span class="risk-dot"></span>
+                <span id="riskStatusText">No account connected</span>
+              </div>
+              <button class="btn-text" id="manageFundsBtn">Manage funds</button>
+            </div>
+
+            <!-- Positions -->
+            <h3 style="font-size: 12px; margin-top: 10px; color: var(--text-muted);">
+              Open positions
+            </h3>
+            <div class="positions-list" id="positionsList">
+              <div class="position-empty">No open positions. Buy a market to get started.</div>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <!-- TICKER -->
+      <section class="ticker">
+        <span class="ticker-label">Live snapshot</span>
+        <div class="ticker-track">
+          <div class="ticker-item">
+            <span class="ticker-symbol">DAX40</span>
+            <span class="ticker-price">18,950.4</span>
+            <span class="ticker-change positive">+0.55%</span>
           </div>
-        </article>
+          <div class="ticker-item">
+            <span class="ticker-symbol">GBP / USD</span>
+            <span class="ticker-price">1.2741</span>
+            <span class="ticker-change negative">–0.18%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">TSLA</span>
+            <span class="ticker-price">241.32</span>
+            <span class="ticker-change positive">+1.02%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">OIL</span>
+            <span class="ticker-price">81.42</span>
+            <span class="ticker-change negative">–0.41%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">NIKKEI</span>
+            <span class="ticker-price">39,210.6</span>
+            <span class="ticker-change positive">+0.77%</span>
+          </div>
+          <!-- Duplicate for smooth scroll -->
+          <div class="ticker-item">
+            <span class="ticker-symbol">DAX40</span>
+            <span class="ticker-price">18,950.4</span>
+            <span class="ticker-change positive">+0.55%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">GBP / USD</span>
+            <span class="ticker-price">1.2741</span>
+            <span class="ticker-change negative">–0.18%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">TSLA</span>
+            <span class="ticker-price">241.32</span>
+            <span class="ticker-change positive">+1.02%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">OIL</span>
+            <span class="ticker-price">81.42</span>
+            <span class="ticker-change negative">–0.41%</span>
+          </div>
+          <div class="ticker-item">
+            <span class="ticker-symbol">NIKKEI</span>
+            <span class="ticker-price">39,210.6</span>
+            <span class="ticker-change positive">+0.77%</span>
+          </div>
+        </div>
       </section>
+    </section>
 
-      <!-- RIGHT: MARKETS & ACCOUNT -->
-      <aside class="side-column">
-        <!-- Markets -->
-        <section class="side-card">
-          <div class="side-header">
-            <div>
-              <h2>Popular markets</h2>
-              <span>Tap buy to open a position</span>
-            </div>
-            <a href="#" style="font-size: 11px; color: var(--accent);">View all</a>
-          </div>
+    <!-- SECTION: MARKETS -->
+    <section id="section-markets" class="section">
+      <div class="info-box">
+        <strong>Markets board.</strong> Browse all tracked instruments, inspect their mini charts, and open trades. This section is
+        available for signed-in demo accounts only.
+      </div>
+      <h2 class="section-title">All demo markets</h2>
+      <p class="section-subtitle">
+        Prices are simulated and update in real time for demo purposes. Use this board to compare markets side by side.
+      </p>
 
-          <div class="markets-list" id="marketsList">
-            <!-- Market rows generated by JS -->
-          </div>
-        </section>
+      <div class="markets-page-grid" id="marketsPageGrid">
+        <!-- Filled by JS -->
+      </div>
+    </section>
 
-        <!-- Account summary -->
-        <section class="side-card">
-          <div class="side-header">
-            <div>
-              <h2>Account overview</h2>
-              <span id="accountTypeLabel">Guest · Demo preview</span>
-            </div>
-          </div>
+    <!-- SECTION: PRICING -->
+    <section id="section-pricing" class="section">
+      <div class="info-box">
+        <strong>Transparent costs.</strong> Below you see how spreads and overnight financing could look in a demo
+        environment. This is not real pricing.
+      </div>
+      <h2 class="section-title">Pricing overview</h2>
+      <p class="section-subtitle">
+        All numbers are fictional, designed to show how a trading platform might present sample costs and leverage ranges.
+      </p>
 
-          <div class="balance-row">
-            <span>Equity</span>
-            <span id="equityValue">$0.00</span>
-          </div>
-          <div class="balance-row">
-            <span>Available margin</span>
-            <span id="availableMarginValue">$0.00</span>
-          </div>
-          <div class="balance-row">
-            <span>Used margin</span>
-            <span id="usedMarginValue">$0.00</span>
-          </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="badge badge-accent">Forex</div>
+          <h3>Major pairs</h3>
+          <p>Spreads from 0.2 pips on EURUSD, 1:30 max leverage, no separate commission in this demo.</p>
+        </div>
+        <div class="pricing-card">
+          <div class="badge">Indices</div>
+          <h3>Equity indices</h3>
+          <p>Index CFDs like NAS100 and DAX40 simulated with tight spreads and fixed overnight financing for learning.</p>
+        </div>
+        <div class="pricing-card">
+          <div class="badge">Crypto</div>
+          <h3>Crypto assets</h3>
+          <p>Volatile products like BTCUSD shown with wider spreads to highlight risk management and position sizing.</p>
+        </div>
+        <div class="pricing-card">
+          <div class="badge">Metals</div>
+          <h3>Gold & metals</h3>
+          <p>Gold (XAUUSD) and other metals use lower leverage and moderate spreads in this practice environment.</p>
+        </div>
+      </div>
+    </section>
 
-          <div class="progress-wrap">
-            <div class="progress-label">
-              <span>Risk usage</span>
-              <span id="riskUsageLabel">0%</span>
-            </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="riskUsageFill"></div>
-            </div>
-          </div>
+    <!-- SECTION: EDUCATION -->
+    <section id="section-education" class="section">
+      <div class="info-box">
+        <strong>Learn mode.</strong> Use these short modules to think about risk, position sizing, and emotional control
+        while trading on demo.
+      </div>
+      <h2 class="section-title">Education corner</h2>
+      <p class="section-subtitle">
+        This is a static learning area with simple ideas. In a real platform you could embed videos, quizzes, and
+        interactive walkthroughs.
+      </p>
 
-          <div class="small-pill">
-            <span>Leverage</span>
-            <strong id="avgLeverage">1 : 0</strong>
-            <span>Avg. on open trades</span>
-          </div>
-
-          <div class="account-footer">
-            <div class="risk-status" id="riskStatus">
-              <span class="risk-dot"></span>
-              <span id="riskStatusText">No open positions</span>
-            </div>
-            <button class="btn-text" id="manageFundsBtn">Manage funds</button>
-          </div>
-
-          <!-- Positions -->
-          <h3 style="font-size: 12px; margin-top: 10px; color: var(--text-muted);">
-            Open positions
-          </h3>
-          <div class="positions-list" id="positionsList">
-            <div class="position-empty">No open positions. Buy a market to get started.</div>
-          </div>
-        </section>
-      </aside>
-    </main>
-
-    <!-- TICKER -->
-    <section class="ticker">
-      <span class="ticker-label">Live snapshot</span>
-      <div class="ticker-track">
-        <div class="ticker-item">
-          <span class="ticker-symbol">DAX40</span>
-          <span class="ticker-price">18,950.4</span>
-          <span class="ticker-change positive">+0.55%</span>
+      <div class="education-grid">
+        <div class="education-card">
+          <h3>Risk per trade</h3>
+          <p>Many traders risk only a small fraction of equity per trade, so a string of losses is survivable.</p>
         </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">GBP / USD</span>
-          <span class="ticker-price">1.2741</span>
-          <span class="ticker-change negative">–0.18%</span>
+        <div class="education-card">
+          <h3>Leverage awareness</h3>
+          <p>High leverage means small price moves can create large account swings. Watching “used margin” helps.</p>
         </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">TSLA</span>
-          <span class="ticker-price">241.32</span>
-          <span class="ticker-change positive">+1.02%</span>
+        <div class="education-card">
+          <h3>Plan before placing</h3>
+          <p>Decide your entry, invalidation level, and size before you hit the buy button, even on demo.</p>
         </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">OIL</span>
-          <span class="ticker-price">81.42</span>
-          <span class="ticker-change negative">–0.41%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">NIKKEI</span>
-          <span class="ticker-price">39,210.6</span>
-          <span class="ticker-change positive">+0.77%</span>
-        </div>
-        <!-- Duplicate for smooth scroll -->
-        <div class="ticker-item">
-          <span class="ticker-symbol">DAX40</span>
-          <span class="ticker-price">18,950.4</span>
-          <span class="ticker-change positive">+0.55%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">GBP / USD</span>
-          <span class="ticker-price">1.2741</span>
-          <span class="ticker-change negative">–0.18%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">TSLA</span>
-          <span class="ticker-price">241.32</span>
-          <span class="ticker-change positive">+1.02%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">OIL</span>
-          <span class="ticker-price">81.42</span>
-          <span class="ticker-change negative">–0.41%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">NIKKEI</span>
-          <span class="ticker-price">39,210.6</span>
-          <span class="ticker-change positive">+0.77%</span>
+        <div class="education-card">
+          <h3>Journal your trades</h3>
+          <p>Recording why you entered and exited positions helps you spot patterns in your decisions over time.</p>
         </div>
       </div>
     </section>
@@ -1293,7 +1557,7 @@
         </div>
         <div class="modal-field">
           <label for="authPassword">Password</label>
-          <input type="password" id="authPassword" placeholder="••••••••" />
+          <input type="password" id="authPassword" placeholder="At least 5 chars, 1 number, 1 uppercase" />
         </div>
         <div class="modal-error" id="authError"></div>
         <button class="btn btn-primary" style="width:100%; margin-top:6px;" id="authSubmit">
@@ -1357,8 +1621,7 @@
 
   <script>
     // ---------------------------
-    // SIMPLE "BACKEND" DATA MODEL
-    // stored in localStorage
+    // DATA MODEL (localStorage)
     // ---------------------------
 
     const STORAGE_KEY_USERS = "novatrade_users";
@@ -1455,13 +1718,13 @@
         password,
         balance: INITIAL_BALANCE,
         usedMargin: 0,
-        positions: [], // {id, marketId, symbol, name, qty, price, margin}
-        history: [] // {time, action, symbol, qty, price}
+        positions: [],
+        history: []
       };
     }
 
     // ---------------------------
-    // AUTH MODAL LOGIC
+    // AUTH UI & LOGIC
     // ---------------------------
 
     const authBackdrop = document.getElementById("authBackdrop");
@@ -1477,7 +1740,7 @@
     const authError = document.getElementById("authError");
     const authSubmit = document.getElementById("authSubmit");
 
-    let authMode = "signin"; // or "signup"
+    let authMode = "signin";
 
     function openAuthModal(mode = "signin") {
       authMode = mode;
@@ -1518,6 +1781,13 @@
       }
     });
 
+    function validatePassword(pw) {
+      if (pw.length < 5) return "Password must be at least 5 characters long.";
+      if (!/[A-Z]/.test(pw)) return "Password must contain at least one uppercase letter.";
+      if (!/[0-9]/.test(pw)) return "Password must contain at least one number.";
+      return null;
+    }
+
     function handleAuthSubmit() {
       const email = authEmail.value.trim().toLowerCase();
       const password = authPassword.value;
@@ -1528,6 +1798,11 @@
       }
       const users = loadUsers();
       if (authMode === "signup") {
+        const pwError = validatePassword(password);
+        if (pwError) {
+          authError.textContent = pwError;
+          return;
+        }
         if (users[email]) {
           authError.textContent = "An account with this email already exists.";
           return;
@@ -1556,13 +1831,62 @@
     });
 
     // ---------------------------
+    // NAVIGATION BETWEEN SECTIONS
+    // ---------------------------
+
+    const navButtons = document.querySelectorAll(".nav-links button");
+    const sections = {
+      trading: document.getElementById("section-trading"),
+      markets: document.getElementById("section-markets"),
+      pricing: document.getElementById("section-pricing"),
+      education: document.getElementById("section-education")
+    };
+
+    function setActiveSection(sectionId) {
+      Object.keys(sections).forEach((id) => {
+        sections[id].classList.toggle("active", id === sectionId);
+      });
+      navButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.section === sectionId);
+      });
+    }
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.section;
+        if (target !== "trading" && !getCurrentUser()) {
+          openAuthModal("signin");
+          return;
+        }
+        setActiveSection(target);
+      });
+    });
+
+    const viewAllMarketsBtn = document.getElementById("viewAllMarketsBtn");
+    viewAllMarketsBtn.addEventListener("click", () => {
+      if (!getCurrentUser()) {
+        openAuthModal("signin");
+        return;
+      }
+      setActiveSection("markets");
+    });
+
+    // ---------------------------
     // MARKETS RENDERING & TRADING
     // ---------------------------
 
     const marketsListEl = document.getElementById("marketsList");
+    const marketsPageGrid = document.getElementById("marketsPageGrid");
     const positionsListEl = document.getElementById("positionsList");
 
-    function renderMarkets() {
+    function formatPrice(value) {
+      // Shorter formatting for FX vs others
+      if (value < 10) return value.toFixed(4).replace(/\.?0+$/, "");
+      if (value < 1000) return value.toFixed(2).replace(/\.?0+$/, "");
+      return value.toFixed(0);
+    }
+
+    function renderMarketsSidebar() {
       marketsListEl.innerHTML = "";
       MARKETS.forEach((m) => {
         const row = document.createElement("div");
@@ -1573,15 +1897,15 @@
             <span class="market-symbol">${m.symbol} · ${m.type}</span>
           </div>
           <div>
-            ${m.price.toFixed(4).replace(/\.?0+$/, "")}
+            <span class="market-price" data-price="${m.id}">${formatPrice(m.price)}</span>
             <div class="market-spread">Spread ${m.spread}</div>
           </div>
-          <div class="market-change ${m.change >= 0 ? "positive" : "negative"}">
+          <div class="market-change ${m.change >= 0 ? "positive" : "negative"}" data-change="${m.id}">
             ${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%
           </div>
           <div class="market-actions">
             <button class="btn-buy" data-market="${m.id}">Buy</button>
-            <button class="btn-sell" disabled>Sell</button>
+            <button class="btn-sell" data-market-sell="${m.id}">Sell</button>
           </div>
         `;
         marketsListEl.appendChild(row);
@@ -1593,10 +1917,62 @@
           openTradeModal(id);
         });
       });
+
+      marketsListEl.querySelectorAll(".btn-sell").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-market-sell");
+          attemptQuickSell(id);
+        });
+      });
+    }
+
+    function renderMarketsPage() {
+      marketsPageGrid.innerHTML = "";
+      MARKETS.forEach((m) => {
+        const card = document.createElement("div");
+        card.className = "market-card";
+        card.innerHTML = `
+          <div class="market-card-header">
+            <div>
+              <div class="market-card-name">${m.name}</div>
+              <div class="market-card-symbol">${m.symbol} · ${m.type}</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="market-card-price" data-price="${m.id}-page">${formatPrice(m.price)}</div>
+              <div class="market-card-change ${m.change >= 0 ? "positive" : "negative"}" data-change="${m.id}-page">
+                ${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%
+              </div>
+            </div>
+          </div>
+          <div class="market-card-chart">
+            <div class="market-card-grid"></div>
+            <div class="market-card-line" data-line="${m.id}"></div>
+          </div>
+          <div class="markets-page-actions">
+            <button class="btn-buy" data-market="${m.id}">Buy</button>
+            <button class="btn-sell" data-market-sell="${m.id}">Sell</button>
+          </div>
+        `;
+        marketsPageGrid.appendChild(card);
+      });
+
+      marketsPageGrid.querySelectorAll(".btn-buy").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-market");
+          openTradeModal(id);
+        });
+      });
+
+      marketsPageGrid.querySelectorAll(".btn-sell").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-market-sell");
+          attemptQuickSell(id);
+        });
+      });
     }
 
     // ---------------------------
-    // TRADE MODAL
+    // TRADE MODAL & BUY LOGIC
     // ---------------------------
 
     const tradeBackdrop = document.getElementById("tradeBackdrop");
@@ -1616,7 +1992,6 @@
     function openTradeModal(marketId) {
       const user = getCurrentUser();
       if (!user) {
-        // require login
         openAuthModal("signin");
         return;
       }
@@ -1631,7 +2006,7 @@
         You are placing a <strong>BUY</strong> order on
         <strong>${currentTradeMarket.name} (${currentTradeMarket.symbol})</strong>.
       `;
-      tradePriceEl.textContent = currentTradeMarket.price.toFixed(4).replace(/\.?0+$/, "");
+      tradePriceEl.textContent = formatPrice(currentTradeMarket.price);
       tradeSymbolSummary.textContent = currentTradeMarket.symbol;
 
       updateTradeCalculations();
@@ -1666,11 +2041,9 @@
 
       const price = currentTradeMarket.price;
       const notional = qty * price;
-      // very simple margin: 5% of notional
       const marginRequired = notional * 0.05;
       tradeMarginEl.textContent = "$" + marginRequired.toFixed(2);
 
-      // approximate max size from free margin
       const freeMargin = user.balance - user.usedMargin;
       const maxSize = freeMargin > 0 ? Math.floor((freeMargin / 0.05) / price) : 0;
       tradeMaxSizeEl.textContent = `${maxSize} units`;
@@ -1719,6 +2092,92 @@
     });
 
     // ---------------------------
+    // SELL / CLOSE POSITIONS
+    // ---------------------------
+
+    function attemptQuickSell(marketId) {
+      const user = getCurrentUser();
+      if (!user) {
+        openAuthModal("signin");
+        return;
+      }
+      // Sell all positions of this market for simplicity
+      const remaining = [];
+      let marginReleased = 0;
+      let closedCount = 0;
+      let pnl = 0;
+
+      const currentPrice = (MARKETS.find((m) => m.id === marketId) || {}).price || 0;
+
+      user.positions.forEach((p) => {
+        if (p.marketId === marketId) {
+          marginReleased += p.margin;
+          closedCount++;
+          // simple fake PnL: small random +/- up to 1% of notional
+          const notional = p.qty * p.price;
+          const delta = (currentPrice - p.price) / p.price;
+          const realised = notional * delta;
+          pnl += realised;
+          user.history.push({
+            time: new Date().toISOString(),
+            action: "SELL",
+            symbol: p.symbol,
+            qty: p.qty,
+            price: currentPrice
+          });
+        } else {
+          remaining.push(p);
+        }
+      });
+
+      if (!closedCount) {
+        alert("No open positions in this market to sell.");
+        return;
+      }
+
+      user.positions = remaining;
+      user.usedMargin = Math.max(0, user.usedMargin - marginReleased);
+      user.balance += pnl;
+
+      setCurrentUser(user);
+      updateUI();
+      alert(
+        `Closed ${closedCount} position(s) in ${marketId.toUpperCase()}.\nRealised P&L: ${pnl >= 0 ? "+" : ""}$${pnl.toFixed(
+          2
+        )}`
+      );
+    }
+
+    function closeSinglePosition(positionId) {
+      const user = getCurrentUser();
+      if (!user) {
+        openAuthModal("signin");
+        return;
+      }
+      const pos = user.positions.find((p) => p.id === positionId);
+      if (!pos) return;
+      const market = MARKETS.find((m) => m.id === pos.marketId);
+      const currentPrice = market ? market.price : pos.price;
+      const notional = pos.qty * pos.price;
+      const delta = (currentPrice - pos.price) / pos.price;
+      const pnl = notional * delta;
+
+      user.positions = user.positions.filter((p) => p.id !== positionId);
+      user.usedMargin = Math.max(0, user.usedMargin - pos.margin);
+      user.balance += pnl;
+      user.history.push({
+        time: new Date().toISOString(),
+        action: "SELL",
+        symbol: pos.symbol,
+        qty: pos.qty,
+        price: currentPrice
+      });
+
+      setCurrentUser(user);
+      updateUI();
+    }
+
+    // ---------------------------
     // ACCOUNT UI UPDATE
     // ---------------------------
 
@@ -1745,7 +2204,7 @@
         openAuthModal("signin");
         return;
       }
-      alert("This is a demo. In a real app, this would open a deposit/withdraw funds page.");
+      alert("Demo mode: in a real app this would open deposit/withdraw options.");
     });
 
     function formatMoney(v) {
@@ -1760,7 +2219,6 @@
         btnLogin.style.display = "inline-flex";
         btnLogout.style.display = "none";
         accountTypeLabel.textContent = "Guest · Log in to unlock full demo";
-        // guest preview values
         kpiBalance.textContent = formatMoney(INITIAL_BALANCE);
         kpiToday.textContent = "+ $0.00 today";
         kpiToday.classList.remove("negative");
@@ -1783,8 +2241,7 @@
 
       accountTypeLabel.textContent = "Demo · USD";
 
-      // simple P&L & balance logic: assume equity = balance, no mark-to-market yet
-      const equity = user.balance; // no floating P&L in this simple version
+      const equity = user.balance;
       const usedMargin = user.usedMargin;
       const freeMargin = Math.max(0, equity - usedMargin);
 
@@ -1844,13 +2301,23 @@
           <div>${p.qty} units</div>
           <div>${formatMoney(p.price)}</div>
           <div>${formatMoney(notional)}</div>
+          <div style="text-align:right;">
+            <button class="pos-sell-btn" data-pos-id="${p.id}">Sell</button>
+          </div>
         `;
         positionsListEl.appendChild(row);
+      });
+
+      positionsListEl.querySelectorAll(".pos-sell-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-pos-id");
+          closeSinglePosition(id);
+        });
       });
     }
 
     // ---------------------------
-    // SIMPLE MAIN CHART PRICE TICK
+    // MAIN HERO CHART TICK
     // ---------------------------
 
     (function () {
@@ -1875,11 +2342,67 @@
     })();
 
     // ---------------------------
+    // LIVE MARKET UPDATES + MINI CHARTS
+    // ---------------------------
+
+    function tickMarkets() {
+      MARKETS.forEach((m) => {
+        const drift = m.id === "btc" ? 0.006 : 0.002;
+        const vol = m.id === "btc" ? 0.02 : 0.01;
+        const changeFactor = 1 + drift + (Math.random() - 0.5) * vol;
+        const oldPrice = m.price;
+        m.price = Math.max(0.0001, m.price * changeFactor);
+        const rel = (m.price - oldPrice) / oldPrice;
+        m.change = (m.change * 0.8) + (rel * 100 * 0.2);
+      });
+
+      updateMarketDisplays();
+    }
+
+    function updateMarketDisplays() {
+      MARKETS.forEach((m) => {
+        // Sidebar
+        const priceSpan = document.querySelector(`.market-price[data-price="${m.id}"]`);
+        const changeSpan = document.querySelector(`.market-change[data-change="${m.id}"]`);
+        if (priceSpan) priceSpan.textContent = formatPrice(m.price);
+        if (changeSpan) {
+          changeSpan.textContent = `${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%`;
+          changeSpan.classList.toggle("positive", m.change >= 0);
+          changeSpan.classList.toggle("negative", m.change < 0);
+        }
+
+        // Markets page
+        const pagePriceSpan = document.querySelector(`.market-card-price[data-price="${m.id}-page"]`);
+        const pageChangeSpan = document.querySelector(`.market-card-change[data-change="${m.id}-page"]`);
+        const line = document.querySelector(`.market-card-line[data-line="${m.id}"]`);
+
+        if (pagePriceSpan) pagePriceSpan.textContent = formatPrice(m.price);
+        if (pageChangeSpan) {
+          pageChangeSpan.textContent = `${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%`;
+          pageChangeSpan.classList.toggle("positive", m.change >= 0);
+          pageChangeSpan.classList.toggle("negative", m.change < 0);
+        }
+
+        if (line) {
+          const tilt = Math.max(-8, Math.min(8, m.change));
+          line.style.transform = `rotate(${tilt / 4}deg)`;
+        }
+      });
+    }
+
+    setInterval(tickMarkets, 2500);
+
+    // ---------------------------
     // INIT
     // ---------------------------
 
-    renderMarkets();
-    updateUI();
+    function init() {
+      renderMarketsSidebar();
+      renderMarketsPage();
+      updateUI();
+    }
+
+    init();
   </script>
 </body>
 </html>
