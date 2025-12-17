@@ -1399,7 +1399,7 @@
                   <span>Sell</span>
                 </div>
               </div>
-              <div id="heroFooterInfo">Real candles and 24h change from Binance.</div>
+              <div id="heroFooterInfo">Candles and 24h stats from Binance.</div>
             </div>
           </article>
         </div>
@@ -1460,7 +1460,7 @@
             </div>
 
             <div class="account-footer">
-              <div class="risk-status" id="riskStatus">
+              <div class="risk-status">
                 <span class="risk-dot"></span>
                 <span id="riskStatusText">No account connected</span>
               </div>
@@ -1497,14 +1497,16 @@
               <span class="section-title-pill">Binance spot snapshot</span>
             </div>
             <p class="section-subtitle">
-              Filter by volatility or symbol and open trades straight from here. Mini charts are built from Binance
-              candlesticks.
+              Filter by volatility or group and open trades straight from here. Mini charts use Binance candles.
             </p>
           </div>
           <div class="pill-row" id="marketsFilters">
             <span class="pill pill-accent active" data-filter="all">All</span>
             <span class="pill" data-filter="volatile">Most volatile</span>
-            <span class="pill" data-filter="crypto">Crypto</span>
+            <span class="pill" data-filter="majors">Majors (BTC/ETH/BNB)</span>
+            <span class="pill" data-filter="altcoins">Altcoins</span>
+            <span class="pill" data-filter="meme">Meme (DOGE/SHIB)</span>
+            <span class="pill" data-filter="defi">DeFi (UNI/LINK)</span>
           </div>
         </div>
 
@@ -1814,17 +1816,20 @@
 
     const BINANCE_BASE = "https://api.binance.com";
 
-    // Use common Binance USDT pairs
     const MARKETS = [
-      { id: "BTCUSDT", name: "Bitcoin", symbol: "BTCUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "ETHUSDT", name: "Ethereum", symbol: "ETHUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "BNBUSDT", name: "BNB", symbol: "BNBUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "SOLUSDT", name: "Solana", symbol: "SOLUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "XRPUSDT", name: "XRP", symbol: "XRPUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "ADAUSDT", name: "Cardano", symbol: "ADAUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "DOGEUSDT", name: "Dogecoin", symbol: "DOGEUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "MATICUSDT", name: "Polygon", symbol: "MATICUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] },
-      { id: "LTCUSDT", name: "Litecoin", symbol: "LTCUSDT", category: "crypto", lastPrice: 0, change24h: 0, candles: [] }
+      { id: "BTCUSDT", name: "Bitcoin", symbol: "BTCUSDT", group: "majors", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "ETHUSDT", name: "Ethereum", symbol: "ETHUSDT", group: "majors", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "BNBUSDT", name: "BNB", symbol: "BNBUSDT", group: "majors", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "SOLUSDT", name: "Solana", symbol: "SOLUSDT", group: "altcoins", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "XRPUSDT", name: "XRP", symbol: "XRPUSDT", group: "altcoins", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "ADAUSDT", name: "Cardano", symbol: "ADAUSDT", group: "altcoins", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "DOGEUSDT", name: "Dogecoin", symbol: "DOGEUSDT", group: "meme", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "MATICUSDT", name: "Polygon", symbol: "MATICUSDT", group: "altcoins", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "LTCUSDT", name: "Litecoin", symbol: "LTCUSDT", group: "altcoins", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "SHIBUSDT", name: "Shiba Inu", symbol: "SHIBUSDT", group: "meme", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "LINKUSDT", name: "Chainlink", symbol: "LINKUSDT", group: "defi", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "UNIUSDT", name: "Uniswap", symbol: "UNIUSDT", group: "defi", lastPrice: 0, change24h: 0, candles: [] },
+      { id: "AVAXUSDT", name: "Avalanche", symbol: "AVAXUSDT", group: "altcoins", lastPrice: 0, change24h: 0, candles: [] }
     ];
 
     // ---------------------------
@@ -2165,11 +2170,8 @@
       settingsSuccess.textContent = "Password updated.";
     });
 
-    // ---------------------------
-    // FORMATTERS
-    // ---------------------------
-
     function formatPrice(value) {
+      if (value < 0.01) return value.toFixed(8).replace(/0+$/, "").replace(/\.$/, "");
       if (value < 1) return value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
       if (value < 1000) return value.toFixed(2);
       return value.toFixed(1);
@@ -2201,7 +2203,7 @@
       const url = `${BINANCE_BASE}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
       const res = await fetch(url);
       const data = await res.json();
-      return data.map((k) => parseFloat(k[4])); // close price
+      return data.map((k) => parseFloat(k[4])); // close prices
     }
 
     async function seedAllCandlesForBoard() {
@@ -2209,7 +2211,7 @@
         try {
           m.candles = await fetchCandles(m.id, "1h", 80);
         } catch {
-          // ignore
+          m.candles = [];
         }
       });
       await Promise.all(promises);
@@ -2231,7 +2233,7 @@
     let heroCandles = [];
     let heroTimeframe = "1D";
 
-    const HERO_TF_TO_BINANCE = {
+    const HERO_TF_TO_INTERVAL = {
       "1D": "15m",
       "1W": "1h",
       "1M": "4h",
@@ -2245,7 +2247,7 @@
 
     async function refreshHeroCandles() {
       const m = getHeroMarket();
-      const interval = HERO_TF_TO_BINANCE[heroTimeframe] || "15m";
+      const interval = HERO_TF_TO_INTERVAL[heroTimeframe] || "15m";
       try {
         heroCandles = await fetchCandles(m.id, interval, 150);
       } catch {
@@ -2311,7 +2313,7 @@
       heroAssetNameEl.textContent = m.name;
       heroAssetSymbolEl.textContent = `${m.symbol} · Binance spot`;
       heroFooterInfo.textContent = `Interval ${
-        HERO_TF_TO_BINANCE[heroTimeframe] || "15m"
+        HERO_TF_TO_INTERVAL[heroTimeframe] || "15m"
       } · candles from Binance.`;
 
       drawLineChart(heroCanvas, data, "#25d586", "#ff6b6b");
@@ -2385,8 +2387,15 @@
     function filteredMarkets() {
       if (marketsFilter === "all") return [...MARKETS];
       if (marketsFilter === "volatile") return getMostVolatileMarkets(9);
-      if (marketsFilter === "crypto") return MARKETS.filter((m) => m.category === "crypto");
+      if (marketsFilter === "majors") return MARKETS.filter((m) => m.group === "majors");
+      if (marketsFilter === "altcoins") return MARKETS.filter((m) => m.group === "altcoins");
+      if (marketsFilter === "meme") return MARKETS.filter((m) => m.group === "meme");
+      if (marketsFilter === "defi") return MARKETS.filter((m) => m.group === "defi");
       return [...MARKETS];
+    }
+
+    function filtersSame(filter) {
+      return marketsFilter === filter;
     }
 
     function renderMarketsPage() {
@@ -2446,10 +2455,6 @@
       }
       renderMarketsPage();
     });
-
-    function filtersSame(filter) {
-      return marketsFilter === filter;
-    }
 
     function drawAllSparklines() {
       MARKETS.forEach((m) => {
@@ -2893,7 +2898,7 @@
     }
 
     // ---------------------------
-    // MARKET TICK LOOP
+    // MARKET DATA LOOP
     // ---------------------------
 
     async function refreshMarketData() {
@@ -2904,23 +2909,19 @@
         renderTicker();
         selectMostVolatileHeroMarket();
       } catch {
-        // ignore network errors for now
+        // network error; ignore for now
       }
     }
 
-    // ---------------------------
-    // INIT
-    // ---------------------------
-
     async function init() {
-      // Initial data from Binance
+      // First tick
       await refreshMarketData();
       await seedAllCandlesForBoard();
       drawAllSparklines();
       updateUI();
 
-      // Periodic refresh for prices/24h stats
-      setInterval(refreshMarketData, 20000);
+      // Refresh prices every ~3 seconds
+      setInterval(refreshMarketData, 3000);
     }
 
     init();
