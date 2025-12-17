@@ -698,10 +698,6 @@
       justify-content: space-between;
     }
 
-    footer span {
-      opacity: 0.85;
-    }
-
     .auth-hint {
       font-size: 11px;
       color: var(--text-muted);
@@ -1083,21 +1079,6 @@
       justify-content: flex-end;
     }
 
-    .info-box {
-      background: rgba(4, 10, 18, 0.96);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 10px 12px;
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-
-    .info-box strong {
-      color: var(--accent-strong);
-      font-weight: 600;
-    }
-
     .pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -1118,14 +1099,61 @@
       color: var(--accent-strong);
     }
 
-    .pricing-grid,
+    .profile-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .profile-card {
+      background: rgba(4, 10, 18, 0.96);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 12px 10px;
+      font-size: 12px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .profile-card h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .profile-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+
+    .profile-row span:first-child {
+      color: var(--text-muted);
+    }
+
+    .profile-stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+
     .education-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 16px;
     }
 
-    .pricing-card,
     .education-card {
       background: rgba(4, 10, 18, 0.96);
       border-radius: 14px;
@@ -1135,63 +1163,14 @@
       box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
     }
 
-    .pricing-card h3,
     .education-card h3 {
       font-size: 14px;
       margin-bottom: 5px;
     }
 
-    .pricing-card p,
     .education-card p {
       font-size: 12px;
       color: var(--text-muted);
-    }
-
-    .pricing-highlight {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--accent-strong);
-      margin-bottom: 4px;
-    }
-
-    .pricing-tagline {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .check-row {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      display: flex;
-      gap: 6px;
-      align-items: flex-start;
-    }
-
-    .check-bullet {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-strong);
-      margin-top: 4px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      border-radius: 999px;
-      padding: 3px 8px;
-      font-size: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .badge-accent {
-      border-color: rgba(255, 159, 67, 0.6);
-      color: var(--accent-strong);
     }
 
     .education-step-label {
@@ -1234,6 +1213,10 @@
 
       .hero-header {
         flex-direction: column;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1293,7 +1276,7 @@
         <div class="nav-links">
           <button data-section="trading" class="active">Trading</button>
           <button data-section="markets">Markets</button>
-          <button data-section="pricing">Pricing</button>
+          <button data-section="pricing">Profile</button>
           <button data-section="education">Education</button>
         </div>
         <div class="nav-cta">
@@ -1313,18 +1296,18 @@
             <div class="hero-title">
               <div class="hero-title-badge">
                 <span class="hero-title-badge-dot"></span>
-                Zero-commission demo · Live-style feed
+                Live-style feed · Active markets
               </div>
               <h1>Trade global markets with a clean, simple interface.</h1>
               <p>
-                Practice on a free demo account and explore CFDs on stocks, forex, indices, and crypto in one place with
-                OrangeVest.
+                Build and test your strategy across indices, forex, crypto, stocks and metals from a single OrangeVest
+                workspace.
               </p>
             </div>
 
             <div class="hero-kpis">
               <div class="kpi">
-                <div class="kpi-label">Demo balance</div>
+                <div class="kpi-label">Balance</div>
                 <div class="kpi-value" id="kpiBalance">$50,000.00</div>
                 <div class="kpi-trend" id="kpiToday">+ $0.00 today</div>
               </div>
@@ -1339,12 +1322,12 @@
           <article class="chart-card">
             <div class="chart-header">
               <div>
-                <div class="asset-name" id="heroAssetName">US Tech 100</div>
-                <div class="asset-symbol" id="heroAssetSymbol">NAS100 · Index CFD</div>
+                <div class="asset-name" id="heroAssetName">Active market</div>
+                <div class="asset-symbol" id="heroAssetSymbol"></div>
               </div>
               <div>
-                <span class="asset-price" id="assetPrice">18,245.12</span>
-                <span class="asset-price-change" id="assetChange">+0.86% (day)</span>
+                <span class="asset-price" id="assetPrice">0.00</span>
+                <span class="asset-price-change" id="assetChange">0.00% (day)</span>
               </div>
             </div>
 
@@ -1372,7 +1355,7 @@
                   <span>Sell</span>
                 </div>
               </div>
-              <div>Spread from 0.7 pts · Leverage up to 1:30</div>
+              <div id="heroFooterInfo">Spread and leverage reflect the selected market.</div>
             </div>
           </article>
         </div>
@@ -1384,7 +1367,7 @@
             <div class="side-header">
               <div>
                 <h2>Popular markets</h2>
-                <span>Tap buy or sell on your demo</span>
+                <span>Top 4 movers right now</span>
               </div>
               <button class="btn-text" id="viewAllMarketsBtn" style="color: var(--accent-strong);">View all</button>
             </div>
@@ -1399,7 +1382,7 @@
             <div class="side-header">
               <div>
                 <h2>Account overview</h2>
-                <span id="accountTypeLabel">Guest · Demo preview</span>
+                <span id="accountTypeLabel">Guest · Connect to start tracking</span>
               </div>
             </div>
 
@@ -1454,58 +1437,8 @@
       <!-- TICKER -->
       <section class="ticker">
         <span class="ticker-label">Live snapshot</span>
-        <div class="ticker-track">
-          <div class="ticker-item">
-            <span class="ticker-symbol">DAX40</span>
-            <span class="ticker-price">18,950.4</span>
-            <span class="ticker-change positive">+0.55%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">GBP / USD</span>
-            <span class="ticker-price">1.2741</span>
-            <span class="ticker-change negative">–0.18%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">TSLA</span>
-            <span class="ticker-price">241.32</span>
-            <span class="ticker-change positive">+1.02%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">OIL</span>
-            <span class="ticker-price">81.42</span>
-            <span class="ticker-change negative">–0.41%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">NIKKEI</span>
-            <span class="ticker-price">39,210.6</span>
-            <span class="ticker-change positive">+0.77%</span>
-          </div>
-          <!-- Duplicate for smooth scroll -->
-          <div class="ticker-item">
-            <span class="ticker-symbol">DAX40</span>
-            <span class="ticker-price">18,950.4</span>
-            <span class="ticker-change positive">+0.55%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">GBP / USD</span>
-            <span class="ticker-price">1.2741</span>
-            <span class="ticker-change negative">–0.18%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">TSLA</span>
-            <span class="ticker-price">241.32</span>
-            <span class="ticker-change positive">+1.02%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">OIL</span>
-            <span class="ticker-price">81.42</span>
-            <span class="ticker-change negative">–0.41%</span>
-          </div>
-          <div class="ticker-item">
-            <span class="ticker-symbol">NIKKEI</span>
-            <span class="ticker-price">39,210.6</span>
-            <span class="ticker-change positive">+0.77%</span>
-          </div>
+        <div class="ticker-track" id="tickerTrack">
+          <!-- Filled by JS -->
         </div>
       </section>
     </section>
@@ -1517,17 +1450,19 @@
           <div>
             <div class="section-title">
               Markets board
-              <span class="section-title-pill">Live-style demo</span>
+              <span class="section-title-pill">Active instruments</span>
             </div>
             <p class="section-subtitle">
-              Track every instrument OrangeVest simulates. Watch the mini charts breathe as prices move, then open or close
-              positions directly from here.
+              Track every instrument OrangeVest simulates. Each tile carries its own mini chart, spread and movement
+              snapshot so you can scan quickly and act from one screen.
             </p>
           </div>
           <div class="pill-row">
-            <span class="pill pill-accent">Forex</span>
-            <span class="pill">Stocks</span>
+            <span class="pill pill-accent">Most volatile</span>
+            <span class="pill">Forex</span>
+            <span class="pill">Indices</span>
             <span class="pill">Crypto</span>
+            <span class="pill">Stocks</span>
             <span class="pill">Metals</span>
           </div>
         </div>
@@ -1538,77 +1473,75 @@
       </div>
     </section>
 
-    <!-- SECTION: PRICING -->
+    <!-- SECTION: PROFILE (was pricing) -->
     <section id="section-pricing" class="section">
       <div class="section-shell">
         <div class="section-header-row">
           <div>
             <div class="section-title">
-              Pricing & costs
-              <span class="section-title-pill">Demo-only numbers</span>
+              Profile
+              <span class="section-title-pill">Your trading footprint</span>
             </div>
-            <p class="section-subtitle">
-              These are fictional pricing examples that show how spreads, leverage and overnight costs could be presented in
-              a real platform.
+            <p class="section-subtitle" id="profileSubtitle">
+              Connect an account to start building your OrangeVest profile: balances, positions and simple session
+              statistics appear here.
             </p>
           </div>
         </div>
 
-        <div class="pricing-grid">
-          <div class="pricing-card">
-            <div class="badge badge-accent">Forex majors</div>
-            <div class="pricing-highlight>From 0.2 pips</div>
-            <div class="pricing-tagline">Learn how tight spreads feel on a liquid pair.</div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>EURUSD, GBPUSD and other majors at up to 1:30 leverage in this demo.</div>
-            </div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>No separate commission; the spread itself is the primary displayed cost.</div>
-            </div>
-          </div>
-
-          <div class="pricing-card">
-            <div class="badge">Indices</div>
-            <div class="pricing-highlight">Index snapshots</div>
-            <div class="pricing-tagline">Practice index trading without touching real markets.</div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>Simulated spreads on NAS100, DAX40 and more for learning volatility.</div>
-            </div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>Moderate leverage shows how overnight and gap risk can affect a portfolio.</div>
-            </div>
-          </div>
-
-          <div class="pricing-card">
-            <div class="badge">Crypto</div>
-            <div class="pricing-highlight">High-volatility demo</div>
-            <div class="pricing-tagline">Crypto CFDs with wider spreads to emphasize risk.</div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>BTCUSD and similar assets simulate sudden price bursts and deeper drawdowns.</div>
-            </div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>Reduced leverage in the demo encourages smaller, controlled position sizes.</div>
+        <div class="profile-grid">
+          <div class="profile-card" id="profileOverviewCard">
+            <h3>Account snapshot</h3>
+            <p id="profileGuestHint">
+              You're currently browsing as a guest. Sign in or create an account to keep balances, trades and risk stats
+              attached to your profile.
+            </p>
+            <div id="profileOverviewDetails" style="display:none; margin-top:8px;">
+              <div class="profile-row">
+                <span>Email</span>
+                <span id="profileEmail"></span>
+              </div>
+              <div class="profile-row">
+                <span>Balance</span>
+                <span id="profileBalance">$0.00</span>
+              </div>
+              <div class="profile-row">
+                <span>Open positions</span>
+                <span id="profileOpenPositions">0</span>
+              </div>
+              <div class="profile-row">
+                <span>Used margin</span>
+                <span id="profileUsedMargin">$0.00</span>
+              </div>
+              <div class="profile-row">
+                <span>Risk usage</span>
+                <span id="profileRiskUsage">0%</span>
+              </div>
+              <div style="margin-top:6px;">
+                <span class="profile-stat-pill">
+                  Sessions
+                  <strong id="profileSessions">0</strong>
+                </span>
+                <span class="profile-stat-pill">
+                  Trades taken
+                  <strong id="profileTrades">0</strong>
+                </span>
+              </div>
             </div>
           </div>
 
-          <div class="pricing-card">
-            <div class="badge">Metals</div>
-            <div class="pricing-highlight">Gold & more</div>
-            <div class="pricing-tagline">Practice defensive and hedge-style positions.</div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>Gold (XAUUSD) and other metals shown with relatively stable simulated pricing.</div>
-            </div>
-            <div class="check-row">
-              <div class="check-bullet"></div>
-              <div>Lower leverage to help you see how diversification might feel in a portfolio.</div>
-            </div>
+          <div class="profile-card">
+            <h3>Session notes</h3>
+            <p>
+              Keep an eye on how you behave, not just what the market does. Use this area as a quick mental checklist
+              for each session.
+            </p>
+            <ul style="margin-top:8px; padding-left:16px; color:var(--text-muted); font-size:12px;">
+              <li>Are you trading your plan or chasing moves?</li>
+              <li>Is your current risk usage in line with your comfort level?</li>
+              <li>Have you set a daily loss limit for this session?</li>
+              <li>Did you pause after a loss before placing the next trade?</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1621,11 +1554,11 @@
           <div>
             <div class="section-title">
               Education corner
-              <span class="section-title-pill">Learn in demo</span>
+              <span class="section-title-pill">Habits over hype</span>
             </div>
             <p class="section-subtitle">
-              Use OrangeVest’s demo environment to build habits: how you size trades, handle losses, and protect your
-              balance matters more than any single entry.
+              Use the tools inside OrangeVest to polish how you size trades, respond to swings and protect your account
+              across different markets.
             </p>
           </div>
         </div>
@@ -1635,11 +1568,11 @@
             <div class="education-step-label">Module 1</div>
             <h3>Risk per trade</h3>
             <p>
-              Decide in advance how much of your equity you’re willing to risk per idea. Many traders keep this number
-              small so a series of losses is survivable.
+              Decide in advance how much of your equity you’re willing to risk on a single idea. Small, consistent risk
+              makes drawdowns easier to recover from.
             </p>
             <div class="education-caption">
-              Try: place a few demo trades where the margin used stays below a percentage you choose.
+              Try: keep used margin below a fixed percentage of equity and notice how stress changes.
             </div>
           </div>
 
@@ -1647,11 +1580,11 @@
             <div class="education-step-label">Module 2</div>
             <h3>Leverage awareness</h3>
             <p>
-              Leverage magnifies both profits and losses. Watching “used margin” and “risk usage” in the account widget
-              teaches you how quickly positions stack up.
+              Leverage magnifies movements. Watching “used margin”, “risk usage” and your open positions list teaches
+              you how quickly exposure stacks up.
             </p>
             <div class="education-caption">
-              Try: deliberately open several small positions and see how overall risk usage changes.
+              Try: open multiple small positions instead of one oversized trade and compare the feeling.
             </div>
           </div>
 
@@ -1659,11 +1592,11 @@
             <div class="education-step-label">Module 3</div>
             <h3>Plan before placing</h3>
             <p>
-              A trade idea is clearer when you know your invalidation level, target and time horizon before clicking
-              “buy.”
+              A clear idea has a reason to enter, a place where it's wrong, and a rough exit plan. If you can’t write
+              it in a sentence, it might be noise.
             </p>
             <div class="education-caption">
-              Try: write your entry plan in a note, then compare it to what actually happens on the chart.
+              Try: write your plan before you click buy, then review it after the trade closes.
             </div>
           </div>
 
@@ -1671,11 +1604,11 @@
             <div class="education-step-label">Module 4</div>
             <h3>Journal your decisions</h3>
             <p>
-              Capturing why you entered or exited positions helps you see patterns in your reactions, not just in the
-              market.
+              Recording why you entered or exited trades turns the platform into a feedback loop, not just a price
+              screen.
             </p>
             <div class="education-caption">
-              Try: after you close a demo trade, jot down what felt easy and what felt uncomfortable.
+              Try: after every session, note one thing you did well and one you’ll tighten next time.
             </div>
           </div>
         </div>
@@ -1684,8 +1617,8 @@
   </div>
 
   <footer>
-    <span>OrangeVest is a fictional demo UI for practice and design purposes only.</span>
-    <span>All data is stored locally in your browser using localStorage.</span>
+    <span>OrangeVest</span>
+    <span>Trade, review, and refine your approach.</span>
   </footer>
 
   <!-- AUTH MODAL -->
@@ -1720,7 +1653,7 @@
       </div>
 
       <div class="modal-footer">
-        <span>Demo only · No real money</span>
+        <span>Secure sign-in for your OrangeVest profile.</span>
       </div>
     </div>
   </div>
@@ -1783,7 +1716,9 @@
 
     const INITIAL_BALANCE = 50000;
 
+    // Unified markets: includes sidebar, ticker & board
     const MARKETS = [
+      // Forex
       {
         id: "eurusd",
         name: "EUR / USD",
@@ -1791,9 +1726,20 @@
         type: "Forex · Major",
         price: 1.0852,
         spread: 0.2,
-        change: 0.23,
+        change: 0,
         history: []
       },
+      {
+        id: "gbpusd",
+        name: "GBP / USD",
+        symbol: "GBPUSD",
+        type: "Forex · Major",
+        price: 1.2741,
+        spread: 0.3,
+        change: 0,
+        history: []
+      },
+      // Stocks
       {
         id: "aapl",
         name: "Apple",
@@ -1801,9 +1747,20 @@
         type: "Stock CFD",
         price: 196.7,
         spread: 0.4,
-        change: -1.32,
+        change: 0,
         history: []
       },
+      {
+        id: "tsla",
+        name: "Tesla",
+        symbol: "TSLA",
+        type: "Stock CFD",
+        price: 241.32,
+        spread: 0.6,
+        change: 0,
+        history: []
+      },
+      // Crypto
       {
         id: "btc",
         name: "Bitcoin",
@@ -1811,9 +1768,10 @@
         type: "Crypto CFD",
         price: 62480,
         spread: 32,
-        change: 3.14,
+        change: 0,
         history: []
       },
+      // Metals
       {
         id: "xauusd",
         name: "Gold",
@@ -1821,7 +1779,38 @@
         type: "Gold · Spot",
         price: 2356.2,
         spread: 0.35,
-        change: 0.45,
+        change: 0,
+        history: []
+      },
+      // Indices & commodities from ticker
+      {
+        id: "dax40",
+        name: "DAX 40",
+        symbol: "DAX40",
+        type: "Index CFD",
+        price: 18950.4,
+        spread: 1.2,
+        change: 0,
+        history: []
+      },
+      {
+        id: "oil",
+        name: "US Crude Oil",
+        symbol: "OIL",
+        type: "Energy CFD",
+        price: 81.42,
+        spread: 0.09,
+        change: 0,
+        history: []
+      },
+      {
+        id: "nikkei",
+        name: "Nikkei 225",
+        symbol: "NIKKEI",
+        type: "Index CFD",
+        price: 39210.6,
+        spread: 1.8,
+        change: 0,
         history: []
       }
     ];
@@ -1830,8 +1819,10 @@
       MARKETS.forEach((m) => {
         if (!m.history || !m.history.length) {
           m.history = [];
+          let base = m.price;
           for (let i = 0; i < 40; i++) {
-            m.history.push(m.price * (1 + (Math.random() - 0.5) * 0.01));
+            base *= 1 + (Math.random() - 0.5) * 0.01;
+            m.history.push(base);
           }
         }
       });
@@ -1888,12 +1879,13 @@
         balance: INITIAL_BALANCE,
         usedMargin: 0,
         positions: [],
-        history: []
+        history: [],
+        sessions: 1
       };
     }
 
     // ---------------------------
-    // AUTH LOGIC
+    // AUTH
     // ---------------------------
 
     const authBackdrop = document.getElementById("authBackdrop");
@@ -1930,7 +1922,7 @@
       const isSignIn = mode === "signin";
       tabSignIn.classList.toggle("active", isSignIn);
       tabSignUp.classList.toggle("active", !isSignIn);
-      authTitle.textContent = isSignIn ? "Sign in to continue" : "Create a demo account";
+      authTitle.textContent = isSignIn ? "Sign in to continue" : "Create a new OrangeVest profile";
       authSubmit.textContent = isSignIn ? "Sign in" : "Create account";
       authError.textContent = "";
     }
@@ -1988,6 +1980,9 @@
           authError.textContent = "Invalid credentials. Try again.";
           return;
         }
+        user.sessions = (user.sessions || 0) + 1;
+        users[email] = user;
+        saveUsers(users);
         saveSession({ email });
         closeAuthModal();
         updateUI();
@@ -2047,16 +2042,25 @@
     const marketsListEl = document.getElementById("marketsList");
     const marketsPageGrid = document.getElementById("marketsPageGrid");
     const positionsListEl = document.getElementById("positionsList");
+    const tickerTrack = document.getElementById("tickerTrack");
 
     function formatPrice(value) {
       if (value < 10) return value.toFixed(4).replace(/\.?0+$/, "");
       if (value < 1000) return value.toFixed(2).replace(/\.?0+$/, "");
-      return value.toFixed(0);
+      return value.toFixed(1);
     }
 
-    function renderMarketsSidebar() {
+    function getMostVolatileMarkets(count) {
+      const sorted = [...MARKETS].sort(
+        (a, b) => Math.abs(b.change || 0) - Math.abs(a.change || 0)
+      );
+      return sorted.slice(0, count);
+    }
+
+    function renderPopularMarketsSidebar() {
       marketsListEl.innerHTML = "";
-      MARKETS.forEach((m) => {
+      const top4 = getMostVolatileMarkets(4);
+      top4.forEach((m) => {
         const row = document.createElement("div");
         row.className = "market-row";
         row.innerHTML = `
@@ -2069,7 +2073,7 @@
             <div class="market-spread">Spread ${m.spread}</div>
           </div>
           <div class="market-change ${m.change >= 0 ? "positive" : "negative"}" data-change="${m.id}">
-            ${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%
+            ${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%
           </div>
           <div class="market-actions">
             <button class="btn-buy" data-market="${m.id}">Buy</button>
@@ -2108,7 +2112,7 @@
             <div style="text-align:right;">
               <div class="market-card-price" data-price="${m.id}-page">${formatPrice(m.price)}</div>
               <div class="market-card-change ${m.change >= 0 ? "positive" : "negative"}" data-change="${m.id}-page">
-                ${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%
+                ${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%
               </div>
             </div>
           </div>
@@ -2138,6 +2142,26 @@
       });
 
       drawAllSparklines();
+    }
+
+    function renderTicker() {
+      tickerTrack.innerHTML = "";
+      const items = [...MARKETS];
+      // build two cycles for smooth loop
+      for (let repeat = 0; repeat < 2; repeat++) {
+        items.forEach((m) => {
+          const item = document.createElement("div");
+          item.className = "ticker-item";
+          item.innerHTML = `
+            <span class="ticker-symbol">${m.symbol}</span>
+            <span class="ticker-price">${formatPrice(m.price)}</span>
+            <span class="ticker-change ${m.change >= 0 ? "positive" : "negative"}">
+              ${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%
+            </span>
+          `;
+          tickerTrack.appendChild(item);
+        });
+      }
     }
 
     // ---------------------------
@@ -2311,7 +2335,7 @@
       setCurrentUser(user);
       updateUI();
       alert(
-        `Closed ${closedCount} position(s) in ${market.symbol || marketId.toUpperCase()}.\nRealised P&L: ${
+        `Closed ${closedCount} position(s) in ${(market && market.symbol) || marketId.toUpperCase()}.\nRealised P&L: ${
           pnl >= 0 ? "+" : ""
         }$${pnl.toFixed(2)}`
       );
@@ -2347,7 +2371,7 @@
     }
 
     // ---------------------------
-    // ACCOUNT UI
+    // ACCOUNT & PROFILE UI
     // ---------------------------
 
     const kpiBalance = document.getElementById("kpiBalance");
@@ -2366,27 +2390,64 @@
     const accountTypeLabel = document.getElementById("accountTypeLabel");
     const manageFundsBtn = document.getElementById("manageFundsBtn");
 
+    const profileSubtitle = document.getElementById("profileSubtitle");
+    const profileGuestHint = document.getElementById("profileGuestHint");
+    const profileOverviewDetails = document.getElementById("profileOverviewDetails");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileBalance = document.getElementById("profileBalance");
+    const profileOpenPositions = document.getElementById("profileOpenPositions");
+    const profileUsedMargin = document.getElementById("profileUsedMargin");
+    const profileRiskUsage = document.getElementById("profileRiskUsage");
+    const profileSessions = document.getElementById("profileSessions");
+    const profileTrades = document.getElementById("profileTrades");
+
     manageFundsBtn.addEventListener("click", () => {
       const user = getCurrentUser();
       if (!user) {
         openAuthModal("signin");
         return;
       }
-      alert("Demo mode: in a real app this would open deposit/withdraw options.");
+      alert("In a live environment this would open deposit/withdraw options.");
     });
 
     function formatMoney(v) {
       return "$" + v.toFixed(2);
     }
 
+    function updateProfileSection(user) {
+      if (!user) {
+        profileSubtitle.textContent =
+          "Connect an account to start building your OrangeVest profile: balances, positions and simple session statistics appear here.";
+        profileGuestHint.style.display = "block";
+        profileOverviewDetails.style.display = "none";
+        return;
+      }
+
+      const equity = user.balance;
+      const usedMargin = user.usedMargin;
+      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
+
+      profileSubtitle.textContent = "Your current OrangeVest session at a glance.";
+      profileGuestHint.style.display = "none";
+      profileOverviewDetails.style.display = "block";
+
+      profileEmail.textContent = user.email;
+      profileBalance.textContent = formatMoney(user.balance);
+      profileOpenPositions.textContent = user.positions.length;
+      profileUsedMargin.textContent = formatMoney(user.usedMargin);
+      profileRiskUsage.textContent = riskUsage.toFixed(0) + "%";
+      profileSessions.textContent = user.sessions || 1;
+      profileTrades.textContent = (user.history || []).length;
+    }
+
     function updateUI() {
       const user = getCurrentUser();
 
       if (!user) {
-        navUser.innerHTML = `<span>Guest demo</span>`;
+        navUser.innerHTML = `<span>Guest</span>`;
         btnLogin.style.display = "inline-flex";
         btnLogout.style.display = "none";
-        accountTypeLabel.textContent = "Guest · Log in to unlock full demo";
+        accountTypeLabel.textContent = "Guest · Connect to start tracking";
         kpiBalance.textContent = formatMoney(INITIAL_BALANCE);
         kpiToday.textContent = "+ $0.00 today";
         kpiToday.classList.remove("negative");
@@ -2400,6 +2461,7 @@
         riskStatusText.textContent = "No account connected";
         avgLeverage.textContent = "1 : 0";
         renderPositions(null);
+        updateProfileSection(null);
         return;
       }
 
@@ -2407,7 +2469,7 @@
       btnLogin.style.display = "none";
       btnLogout.style.display = "inline";
 
-      accountTypeLabel.textContent = "Demo · USD";
+      accountTypeLabel.textContent = "Profile · Connected";
 
       const equity = user.balance;
       const usedMargin = user.usedMargin;
@@ -2446,6 +2508,7 @@
       }
 
       renderPositions(user);
+      updateProfileSection(user);
     }
 
     function renderPositions(user) {
@@ -2485,22 +2548,8 @@
     }
 
     // ---------------------------
-    // HERO CHART
+    // CHART UTIL
     // ---------------------------
-
-    const heroCanvas = document.getElementById("heroChartCanvas");
-    const assetPriceEl = document.getElementById("assetPrice");
-    const assetChangeEl = document.getElementById("assetChange");
-    let heroHistory = [];
-
-    function initHeroHistory() {
-      heroHistory = [];
-      let base = 18245.12;
-      for (let i = 0; i < 60; i++) {
-        base *= 1 + (Math.random() - 0.5) * 0.002;
-        heroHistory.push(base);
-      }
-    }
 
     function drawLineChart(canvas, data, colorUp, colorDown) {
       if (!canvas || !data || data.length < 2) return;
@@ -2509,7 +2558,7 @@
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const w = rect.width;
       const h = rect.height;
@@ -2518,7 +2567,6 @@
       const min = Math.min(...data);
       const max = Math.max(...data);
       const range = max - min || 1;
-
       const step = w / (data.length - 1);
 
       const lastChange = data[data.length - 1] - data[0];
@@ -2546,32 +2594,81 @@
       ctx.fill();
     }
 
-    function tickHeroChart() {
-      const last = heroHistory[heroHistory.length - 1];
-      const move = last * ((Math.random() - 0.5) * 0.0025);
-      const next = last + move;
-      heroHistory.push(next);
-      if (heroHistory.length > 60) heroHistory.shift();
+    // ---------------------------
+    // HERO MARKET & CHART
+    // ---------------------------
 
-      const changePct = ((heroHistory[heroHistory.length - 1] - heroHistory[0]) / heroHistory[0]) * 100;
-      const sign = changePct >= 0 ? "+" : "";
-      assetPriceEl.textContent = heroHistory[heroHistory.length - 1].toFixed(2);
-      assetChangeEl.textContent = `${sign}${changePct.toFixed(2)}% (day)`;
-      assetChangeEl.classList.toggle("negative", changePct < 0);
+    const heroCanvas = document.getElementById("heroChartCanvas");
+    const heroAssetNameEl = document.getElementById("heroAssetName");
+    const heroAssetSymbolEl = document.getElementById("heroAssetSymbol");
+    const heroPriceEl = document.getElementById("assetPrice");
+    const heroChangeEl = document.getElementById("assetChange");
+    const heroFooterInfo = document.getElementById("heroFooterInfo");
 
-      drawLineChart(heroCanvas, heroHistory, "#25d586", "#ff6b6b");
+    let heroMarketId = null;
+
+    function selectMostVolatileHeroMarket() {
+      const sorted = [...MARKETS].sort(
+        (a, b) => Math.abs(b.change || 0) - Math.abs(a.change || 0)
+      );
+      heroMarketId = (sorted[0] && sorted[0].id) || MARKETS[0].id;
+      updateHeroMeta();
+      drawHeroChart();
+    }
+
+    function getHeroMarket() {
+      return MARKETS.find((m) => m.id === heroMarketId) || MARKETS[0];
+    }
+
+    function updateHeroMeta() {
+      const m = getHeroMarket();
+      heroAssetNameEl.textContent = m.name;
+      heroAssetSymbolEl.textContent = `${m.symbol} · ${m.type}`;
+      heroFooterInfo.textContent = `Spread ${m.spread} · Movement ${
+        (m.change || 0).toFixed(2)
+      }% over recent candles.`;
+    }
+
+    function drawHeroChart() {
+      const m = getHeroMarket();
+      const data = m.history;
+      if (!data || data.length < 2) return;
+
+      const lastPrice = data[data.length - 1];
+      const dayChange = ((lastPrice - data[0]) / data[0]) * 100;
+      const sign = dayChange >= 0 ? "+" : "";
+      heroPriceEl.textContent = lastPrice.toFixed(2);
+      heroChangeEl.textContent = `${sign}${dayChange.toFixed(2)}% (day)`;
+      heroChangeEl.classList.toggle("negative", dayChange < 0);
+
+      drawLineChart(heroCanvas, data, "#25d586", "#ff6b6b");
     }
 
     // ---------------------------
-    // MINI MARKET CHARTS
+    // MINI MARKET CHARTS & TICKS
     // ---------------------------
 
     function updateMarketHistory() {
       MARKETS.forEach((m) => {
         if (!m.history) m.history = [];
         const last = m.history.length ? m.history[m.history.length - 1] : m.price;
-        const drift = m.id === "btc" ? 0.004 : 0.0015;
-        const vol = m.id === "btc" ? 0.015 : 0.008;
+        const drift =
+          m.id === "btc"
+            ? 0.004
+            : m.id === "tsla" || m.id === "aapl"
+            ? 0.002
+            : m.id === "oil"
+            ? 0.0025
+            : 0.0015;
+        const vol =
+          m.id === "btc"
+            ? 0.015
+            : m.id === "tsla" || m.id === "aapl"
+            ? 0.01
+            : m.id === "oil"
+            ? 0.012
+            : 0.008;
+
         const move = last * (drift + (Math.random() - 0.5) * vol);
         const next = Math.max(0.0001, last + move);
         m.history.push(next);
@@ -2591,26 +2688,28 @@
     }
 
     function updateMarketDisplays() {
-      MARKETS.forEach((m) => {
-        const priceSpan = document.querySelector(`.market-price[data-price="${m.id}"]`);
-        const changeSpan = document.querySelector(`.market-change[data-change="${m.id}"]`);
-        if (priceSpan) priceSpan.textContent = formatPrice(m.price);
-        if (changeSpan) {
-          changeSpan.textContent = `${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%`;
-          changeSpan.classList.toggle("positive", m.change >= 0);
-          changeSpan.classList.toggle("negative", m.change < 0);
-        }
+      // Update sidebar popular markets fully (re-render list)
+      renderPopularMarketsSidebar();
 
-        const pagePriceSpan = document.querySelector(`.market-card-price[data-price="${m.id}-page"]`);
-        const pageChangeSpan = document.querySelector(`.market-card-change[data-change="${m.id}-page"]`);
+      // Update board prices/change
+      MARKETS.forEach((m) => {
+        const pagePriceSpan = document.querySelector(
+          `.market-card-price[data-price="${m.id}-page"]`
+        );
+        const pageChangeSpan = document.querySelector(
+          `.market-card-change[data-change="${m.id}-page"]`
+        );
         if (pagePriceSpan) pagePriceSpan.textContent = formatPrice(m.price);
         if (pageChangeSpan) {
-          pageChangeSpan.textContent = `${m.change >= 0 ? "+" : ""}${m.change.toFixed(2)}%`;
+          pageChangeSpan.textContent = `${m.change >= 0 ? "+" : ""}${(m.change || 0).toFixed(2)}%`;
           pageChangeSpan.classList.toggle("positive", m.change >= 0);
           pageChangeSpan.classList.toggle("negative", m.change < 0);
         }
       });
+
       drawAllSparklines();
+      renderTicker();
+      drawHeroChart();
     }
 
     function tickMarkets() {
@@ -2619,19 +2718,31 @@
     }
 
     // ---------------------------
+    // HERO MARKET SELECTION (hourly)
+    // ---------------------------
+
+    // Re-select hero market every hour based on absolute change
+    function setupHeroSelection() {
+      selectMostVolatileHeroMarket(); // initial
+      const oneHour = 60 * 60 * 1000;
+      setInterval(selectMostVolatileHeroMarket, oneHour);
+    }
+
+    // ---------------------------
     // INIT
     // ---------------------------
 
     function init() {
       seedHistories();
-      renderMarketsSidebar();
       renderMarketsPage();
-      initHeroHistory();
+      renderPopularMarketsSidebar();
+      renderTicker();
+      selectMostVolatileHeroMarket();
       updateUI();
-      tickHeroChart();
-      tickMarkets();
-      setInterval(tickHeroChart, 2200);
+
+      // timers
       setInterval(tickMarkets, 2600);
+      setupHeroSelection();
     }
 
     init();
