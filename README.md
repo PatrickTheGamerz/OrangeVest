@@ -2024,434 +2024,1086 @@
     </div>
   </div>
 
+
   <!-- AUTH / TRADE / FUNDS LOGIC AND MARKET DATA WILL CONTINUE IN PART 2 -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-// ===============================
-// GLOBAL STATE
-// ===============================
-let USER = {
-  loggedIn: false,
-  email: null,
-  displayName: "Guest",
-  mode: "normal", // normal | test
-  currency: "USD",
-  balanceUSD: 100,
-  testBalanceUSD: 1000000,
-  positions: [], // {symbol, qty, entry, timestamp}
-  sessions: 0,
-  trades: 0
-};
-
-let MARKET_DATA = {};
-let MARKET_LIST = [];
-let HERO_SYMBOL = "BTCUSDT";
-let HERO_TIMEFRAME = "1D";
-let CHART = null;
-let FX = {
-  USD: 1,
-  EUR: 0.92,
-  PLN: 4.1,
-  GBP: 0.79,
-  CHF: 0.88,
-  JPY: 150,
-  AUD: 1.5,
-  CAD: 1.35,
-  SEK: 10.5,
-  NOK: 10.8,
-  DKK: 6.8,
-  CZK: 23.5,
-  HUF: 360
-};
-
-// ===============================
-// BINANCE API FETCHER
-// ===============================
-async function fetchBinancePrices() {
-  try {
-    const res = await fetch("https://api.binance.com/api/v3/ticker/24hr");
-    const data = await res.json();
-
-    MARKET_DATA = {};
-    MARKET_LIST = [];
-
-    data.forEach(item => {
-      if (!item.symbol.endsWith("USDT")) return;
-
-      const symbol = item.symbol.replace("USDT", "");
-      const price = parseFloat(item.lastPrice);
-      const change = parseFloat(item.priceChangePercent);
-
-      MARKET_DATA[symbol] = {
-        symbol,
-        price,
-        change,
-        raw: item
-      };
-
-      MARKET_LIST.push({
-        symbol,
-        price,
-        change
+  <script>
+    // ===============================
+    // MARKET UNIVERSE (symbols as on Binance)
+    // ===============================
+    const SYMBOL_GROUPS = {
+      core: [
+        "BTC", "ETH", "BNB", "SOL", "XRP", "ADA", "MATIC", "LTC"
+      ],
+      meme: [
+        "DOGE", "SHIB", "PEPE", "FLOKI"
+      ],
+      defi: [
+        "LINK", "UNI", "AAVE", "CRV", "SNX", "LDO", "GMX", "DYDX",
+        "INJ", "CAKE", "SUSHI", "BAL", "MKR", "COMP", "FXS"
+      ],
+      stable: [
+        "USDT", "USDC", "DAI", "FDUSD"
+      ],
+      infra: [
+        "DOT", "AVAX", "TON", "TRX", "XLM", "NEAR", "ATOM", "HBAR",
+        "ALGO", "VET", "RUNE", "KAVA", "ONE", "EGLD", "MINA",
+        "ICP", "FIL", "EOS", "XTZ", "XMR", "DASH", "ZEC",
+        "KAS", "BTT", "LUNC", "LUNA", "HNT"
+      ],
+      gaming: [
+        "SAND", "MANA", "AXS", "GALA", "ILV", "GMT", "CHZ", "ENJ"
+      ],
+      ai: [
+        "OCEAN", "AGIX", "FET", "WLD"
+      ],
+      wallet: [
+        "SFP", "TWT"
+      ],
+      other: [
+        "IMX", "OP", "ARB", "WAVES", "ONT", "QTUM", "CELO",
+        "FLOW", "TIA", "SEI", "STRK", "MNT", "CORE",
+        "ANKR", "BAND", "ONG", "RSR", "SNT", "POWR",
+        "DENT", "CVC", "AR"
+      ]
+    };
+
+    const ALL_SYMBOLS = [
+      "BTC","ETH","BNB","SOL","XRP","ADA","DOGE","SHIB","DOT","AVAX","MATIC",
+      "TON","TRX","XLM","LTC","LINK","UNI","APT","NEAR","ATOM","HBAR","ALGO",
+      "VET","RNDR","IMX","OP","ARB","LDO","AAVE","CRV","SNX","SAND","MANA",
+      "AXS","GALA","PEPE","FLOKI","FDUSD","USDT","USDC","DAI","FTM","ICP",
+      "FIL","EOS","XTZ","XMR","DASH","ZEC","RUNE","KAVA","ONE","EGLD","MINA",
+      "DYDX","INJ","GMX","CAKE","SUSHI","BAL","MKR","COMP","FXS","WAVES","NEO",
+      "ONT","QTUM","CHZ","ENJ","ILV","BLUR","GMT","SFP","TWT","CELO","FLOW",
+      "OCEAN","AGIX","FET","WLD","TIA","SEI","STRK","MNT","CORE","KAS","BTT",
+      "LUNC","LUNA","HNT","ANKR","BAND","ONG","RSR","SNT","POWR","DENT","CVC",
+      "AR"
+    ];
+
+    // symbol -> {price, change, lastUpdate}
+    let MARKET_DATA = {};
+    let HERO_SYMBOL = "BTC";
+    let HERO_TIMEFRAME = "1D";
+
+    // ===============================
+    // USER STATE
+    // ===============================
+    const STORAGE_KEY = "orangevest_state_v2";
+
+    let USER = {
+      loggedIn: false,
+      email: null,
+      displayName: "Guest",
+      mode: "normal", // normal | test
+      currency: "USD",
+      balanceUSD: 100,
+      testBalanceUSD: 1000000,
+      positions: [], // {id, symbol, qty, entry, openedAt, autoCloseAt}
+      sessions: 0,
+      trades: 0
+    };
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        USER = { ...USER, ...parsed };
+      } catch {}
+    }
+
+    function saveState() {
+      const copy = { ...USER };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(copy));
+    }
+
+    loadState();
+
+    // ===============================
+    // FX / CURRENCY
+    // ===============================
+    const FX = {
+      USD: 1,
+      EUR: 0.92,
+      PLN: 4.1,
+      GBP: 0.79,
+      CHF: 0.88,
+      JPY: 150,
+      AUD: 1.5,
+      CAD: 1.35,
+      SEK: 10.5,
+      NOK: 10.8,
+      DKK: 6.8,
+      CZK: 23.5,
+      HUF: 360
+    };
+
+    const currencyLabelEl = document.getElementById("currencyLabel");
+    const fundsBackdrop = document.getElementById("fundsBackdrop");
+    const fundsClose = document.getElementById("fundsClose");
+    const fundsSave = document.getElementById("fundsSave");
+    const currencySelect = document.getElementById("currencySelect");
+
+    function formatCurrency(valueUSD) {
+      const fx = FX[USER.currency] || 1;
+      const converted = valueUSD * fx;
+
+      const symbol = {
+        USD: "$",
+        EUR: "€",
+        PLN: "zł",
+        GBP: "£",
+        CHF: "CHF ",
+        JPY: "¥",
+        AUD: "$",
+        CAD: "$",
+        SEK: "kr ",
+        NOK: "kr ",
+        DKK: "kr ",
+        CZK: "Kč ",
+        HUF: "Ft "
+      }[USER.currency] || "$";
+
+      return symbol + converted.toFixed(2);
+    }
+
+    function openFundsModal() {
+      fundsBackdrop.classList.add("show");
+      currencySelect.value = USER.currency;
+    }
+
+    function closeFundsModal() {
+      fundsBackdrop.classList.remove("show");
+    }
+
+    fundsClose.addEventListener("click", closeFundsModal);
+    fundsBackdrop.addEventListener("click", (e) => {
+      if (e.target === fundsBackdrop) closeFundsModal();
+    });
+
+    fundsSave.addEventListener("click", () => {
+      USER.currency = currencySelect.value || "USD";
+      saveState();
+      updateUI();
+      closeFundsModal();
+    });
+
+    document.getElementById("manageFundsBtn").addEventListener("click", openFundsModal);
+
+    // ===============================
+    // AUTH
+    // ===============================
+    const authBackdrop = document.getElementById("authBackdrop");
+    const authClose = document.getElementById("authClose");
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
+    const authError = document.getElementById("authError");
+    const authSubmit = document.getElementById("authSubmit");
+    const tabSignIn = document.getElementById("tabSignIn");
+    const tabSignUp = document.getElementById("tabSignUp");
+    const btnLogin = document.getElementById("btnLogin");
+    const btnLogout = document.getElementById("btnLogout");
+    const navUser = document.getElementById("navUser");
+    const authTitle = document.getElementById("authTitle");
+
+    let authMode = "signin";
+
+    function openAuth(mode = "signin") {
+      authMode = mode;
+      authBackdrop.classList.add("show");
+      authEmail.value = "";
+      authPassword.value = "";
+      authError.textContent = "";
+      tabSignIn.classList.toggle("active", mode === "signin");
+      tabSignUp.classList.toggle("active", mode === "signup");
+      authTitle.textContent =
+        mode === "signin" ? "Sign in to your profile" : "Create an OrangeVest profile";
+    }
+
+    function closeAuth() {
+      authBackdrop.classList.remove("show");
+    }
+
+    authClose.addEventListener("click", closeAuth);
+    authBackdrop.addEventListener("click", (e) => {
+      if (e.target === authBackdrop) closeAuth();
+    });
+
+    btnLogin.addEventListener("click", () => openAuth("signin"));
+    btnLogout.addEventListener("click", () => {
+      USER.loggedIn = false;
+      USER.email = null;
+      USER.displayName = "Guest";
+      saveState();
+      updateUI();
+    });
+
+    tabSignIn.addEventListener("click", () => openAuth("signin"));
+    tabSignUp.addEventListener("click", () => openAuth("signup"));
+
+    authSubmit.addEventListener("click", handleAuthSubmit);
+
+    function handleAuthSubmit() {
+      const email = authEmail.value.trim();
+      const pw = authPassword.value.trim();
+
+      if (!email || !pw) {
+        authError.textContent = "Please enter email and password.";
+        return;
+      }
+
+      // simplified "auth" – local only
+      if (authMode === "signup") {
+        USER.loggedIn = true;
+        USER.email = email;
+        USER.displayName = email.split("@")[0];
+        USER.sessions += 1;
+        saveState();
+        closeAuth();
+        updateUI();
+      } else {
+        USER.loggedIn = true;
+        USER.email = email;
+        if (!USER.displayName || USER.displayName === "Guest") {
+          USER.displayName = email.split("@")[0];
+        }
+        USER.sessions += 1;
+        saveState();
+        closeAuth();
+        updateUI();
+      }
+    }
+
+    // ===============================
+    // NAVIGATION
+    // ===============================
+    const sections = {
+      trading: document.getElementById("section-trading"),
+      markets: document.getElementById("section-markets"),
+      pricing: document.getElementById("section-pricing"),
+      education: document.getElementById("section-education")
+    };
+
+    document.querySelectorAll(".nav-links button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.section;
+        Object.keys(sections).forEach((id) => {
+          sections[id].classList.toggle("active", id === target);
+        });
+        document.querySelectorAll(".nav-links button").forEach((b) =>
+          b.classList.toggle("active", b.dataset.section === target)
+        );
       });
     });
 
-    MARKET_LIST.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
-
-    updateHeroAsset();
-    updatePopularMarkets();
-    updateTicker();
-    updateMarketsPage();
-    updatePortfolioValues();
-  } catch (err) {
-    console.error("Binance fetch error:", err);
-  }
-}
-
-// ===============================
-// HERO ASSET UPDATE
-// ===============================
-function updateHeroAsset() {
-  const data = MARKET_DATA[HERO_SYMBOL.replace("USDT", "")];
-  if (!data) return;
-
-  document.getElementById("heroAssetName").textContent = data.symbol;
-  document.getElementById("heroAssetSymbol").textContent = data.symbol;
-  document.getElementById("assetPrice").textContent = formatCurrency(data.price);
-  const ch = document.getElementById("assetChange");
-
-  ch.textContent = data.change.toFixed(2) + "% (24h)";
-  ch.classList.toggle("negative", data.change < 0);
-
-  drawHeroChart();
-}
-
-// ===============================
-// HERO CHART DRAWING
-// ===============================
-async function drawHeroChart() {
-  const canvas = document.getElementById("heroChartCanvas");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = canvas.clientWidth;
-  canvas.height = canvas.clientHeight;
-
-  const prices = await fetchCandles(HERO_SYMBOL, HERO_TIMEFRAME);
-  if (!prices || prices.length === 0) return;
-
-  const min = Math.min(...prices);
-  const max = Math.max(...prices);
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "#ff9f43";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-
-  prices.forEach((p, i) => {
-    const x = (i / (prices.length - 1)) * canvas.width;
-    const y = canvas.height - ((p - min) / (max - min)) * canvas.height;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-
-  ctx.stroke();
-}
-
-// ===============================
-// FETCH CANDLES
-// ===============================
-async function fetchCandles(symbol, tf) {
-  const interval = {
-    "1D": "1h",
-    "1W": "4h",
-    "1M": "1d",
-    "6M": "1d",
-    "1Y": "1w"
-  }[tf];
-
-  try {
-    const res = await fetch(
-      `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=100`
-    );
-    const data = await res.json();
-    return data.map(c => parseFloat(c[4])); // close prices
-  } catch {
-    return [];
-  }
-}
-
-// ===============================
-// TIMEFRAME BUTTONS
-// ===============================
-document.querySelectorAll("#heroTimeframeButtons button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document
-      .querySelectorAll("#heroTimeframeButtons button")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-    HERO_TIMEFRAME = btn.dataset.tf;
-    drawHeroChart();
-  });
-});
-
-// ===============================
-// POPULAR MARKETS
-// ===============================
-function updatePopularMarkets() {
-  const list = document.getElementById("marketsList");
-  list.innerHTML = "";
-
-  MARKET_LIST.slice(0, 12).forEach(m => {
-    const row = document.createElement("div");
-    row.className = "market-row";
-
-    row.innerHTML = `
-      <div class="market-name">
-        <strong>${m.symbol}</strong>
-        <span class="market-symbol">${m.symbol}/USDT</span>
-      </div>
-      <div>${formatCurrency(m.price)}</div>
-      <div class="market-change ${m.change < 0 ? "negative" : "positive"}">
-        ${m.change.toFixed(2)}%
-      </div>
-      <div class="market-actions">
-        <button class="btn-buy-green" data-buy="${m.symbol}">Buy</button>
-        <button class="btn-sell-red" data-sell="${m.symbol}">Sell</button>
-      </div>
-    `;
-
-    list.appendChild(row);
-  });
-}
-
-// ===============================
-// TICKER
-// ===============================
-function updateTicker() {
-  const track = document.getElementById("tickerTrack");
-  track.innerHTML = "";
-
-  MARKET_LIST.slice(0, 20).forEach(m => {
-    const item = document.createElement("div");
-    item.className = "ticker-item";
-
-    item.innerHTML = `
-      <span class="ticker-symbol">${m.symbol}</span>
-      <span class="ticker-price">${formatCurrency(m.price)}</span>
-      <span class="ticker-change ${m.change < 0 ? "negative" : "positive"}">
-        ${m.change.toFixed(2)}%
-      </span>
-    `;
-
-    track.appendChild(item);
-  });
-}
-
-// ===============================
-// MARKETS PAGE
-// ===============================
-function updateMarketsPage() {
-  const grid = document.getElementById("marketsPageGrid");
-  grid.innerHTML = "";
-
-  MARKET_LIST.slice(0, 200).forEach(m => {
-    const card = document.createElement("div");
-    card.className = "market-card";
-
-    card.innerHTML = `
-      <div class="market-card-header">
-        <div>
-          <div class="market-card-name">${m.symbol}</div>
-          <div class="market-card-symbol">${m.symbol}/USDT</div>
-        </div>
-        <div>
-          <div class="market-card-price">${formatCurrency(m.price)}</div>
-          <div class="market-card-change ${m.change < 0 ? "negative" : "positive"}">
-            ${m.change.toFixed(2)}%
-          </div>
-        </div>
-      </div>
-      <div class="market-card-chart">
-        <canvas class="market-card-canvas" data-symbol="${m.symbol}"></canvas>
-      </div>
-      <div class="markets-page-actions">
-        <button class="btn-buy-green" data-buy="${m.symbol}">Buy</button>
-        <button class="btn-sell-red" data-sell="${m.symbol}">Sell</button>
-      </div>
-    `;
-
-    grid.appendChild(card);
-  });
-
-  drawAllMiniCharts();
-}
-
-// ===============================
-// MINI CHARTS
-// ===============================
-async function drawAllMiniCharts() {
-  const canvases = document.querySelectorAll(".market-card-canvas");
-
-  for (const canvas of canvases) {
-    const symbol = canvas.dataset.symbol + "USDT";
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-
-    const prices = await fetchCandles(symbol, "1D");
-    if (!prices || prices.length === 0) continue;
-
-    const min = Math.min(...prices);
-    const max = Math.max(...prices);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#ff9f43";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-
-    prices.forEach((p, i) => {
-      const x = (i / (prices.length - 1)) * canvas.width;
-      const y = canvas.height - ((p - min) / (max - min)) * canvas.height;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    document.getElementById("viewAllMarketsBtn").addEventListener("click", () => {
+      Object.keys(sections).forEach((id) => {
+        sections[id].classList.toggle("active", id === "markets");
+      });
+      document.querySelectorAll(".nav-links button").forEach((b) =>
+        b.classList.toggle("active", b.dataset.section === "markets")
+      );
     });
 
-    ctx.stroke();
-  }
-}
+    // ===============================
+    // MODES (NORMAL / TEST)
+    // ===============================
+    const modeNormalBtn = document.getElementById("modeNormalBtn");
+    const modeTestBtn = document.getElementById("modeTestBtn");
+    const modeDescription = document.getElementById("modeDescription");
 
-// ===============================
-// PORTFOLIO VALUES
-// ===============================
-function updatePortfolioValues() {
-  let total = 0;
+    function updateModeUI() {
+      modeNormalBtn.classList.toggle("active", USER.mode === "normal");
+      modeTestBtn.classList.toggle("active", USER.mode === "test");
+      modeDescription.textContent =
+        USER.mode === "normal"
+          ? "Normal: internal balance 100 (base USD), trades and balance are saved to your profile."
+          : "Test: internal balance 1 000 000 (base USD), trades reset when you clear your browser data.";
+    }
 
-  USER.positions.forEach(pos => {
-    const m = MARKET_DATA[pos.symbol];
-    if (!m) return;
-    total += pos.qty * m.price;
-  });
+    modeNormalBtn.addEventListener("click", () => {
+      USER.mode = "normal";
+      saveState();
+      updateModeUI();
+      updateUI();
+    });
 
-  const cash = USER.mode === "normal" ? USER.balanceUSD : USER.testBalanceUSD;
+    modeTestBtn.addEventListener("click", () => {
+      USER.mode = "test";
+      saveState();
+      updateModeUI();
+      updateUI();
+    });
 
-  document.getElementById("portfolioValue").textContent = formatCurrency(total + cash);
-  document.getElementById("equityValue").textContent = formatCurrency(total + cash);
-  document.getElementById("availableMarginValue").textContent = formatCurrency(cash);
-  document.getElementById("usedMarginValue").textContent = formatCurrency(total);
+    // ===============================
+    // PROFILE SETTINGS
+    // ===============================
+    const profileGuestHint = document.getElementById("profileGuestHint");
+    const profileOverviewDetails = document.getElementById("profileOverviewDetails");
+    const profileDisplayName = document.getElementById("profileDisplayName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profileBalance = document.getElementById("profileBalance");
+    const profilePortfolio = document.getElementById("profilePortfolio");
+    const profileOpenPositions = document.getElementById("profileOpenPositions");
+    const profileSessions = document.getElementById("profileSessions");
+    const profileTrades = document.getElementById("profileTrades");
 
-  const risk = total / (total + cash);
-  document.getElementById("riskUsageFill").style.width = (risk * 100).toFixed(0) + "%";
-  document.getElementById("riskUsageLabel").textContent = (risk * 100).toFixed(0) + "%";
-}
+    const displayNameInput = document.getElementById("displayNameInput");
+    const saveDisplayNameBtn = document.getElementById("saveDisplayNameBtn");
+    const newPasswordInput = document.getElementById("newPasswordInput");
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
+    const settingsSuccess = document.getElementById("settingsSuccess");
+    const settingsError = document.getElementById("settingsError");
 
-// ===============================
-// FORMAT CURRENCY
-// ===============================
-function formatCurrency(v) {
-  const fx = FX[USER.currency] || 1;
-  const converted = v * fx;
+    saveDisplayNameBtn.addEventListener("click", () => {
+      const val = displayNameInput.value.trim();
+      settingsSuccess.textContent = "";
+      settingsError.textContent = "";
+      if (!val) {
+        settingsError.textContent = "Display name cannot be empty.";
+        return;
+      }
+      USER.displayName = val;
+      saveState();
+      updateUI();
+      settingsSuccess.textContent = "Display name updated.";
+    });
 
-  const symbol = {
-    USD: "$",
-    EUR: "€",
-    PLN: "zł",
-    GBP: "£",
-    CHF: "CHF ",
-    JPY: "¥",
-    AUD: "$",
-    CAD: "$",
-    SEK: "kr ",
-    NOK: "kr ",
-    DKK: "kr ",
-    CZK: "Kč ",
-    HUF: "Ft "
-  }[USER.currency] || "$";
+    changePasswordBtn.addEventListener("click", () => {
+      settingsSuccess.textContent = "";
+      settingsError.textContent = "";
+      if (!USER.loggedIn) {
+        settingsError.textContent = "Sign in first to change password.";
+        return;
+      }
+      const pw = newPasswordInput.value.trim();
+      if (!pw || pw.length < 5) {
+        settingsError.textContent = "Use at least 5 characters.";
+        return;
+      }
+      newPasswordInput.value = "";
+      settingsSuccess.textContent = "Password updated (locally).";
+    });
 
-  return symbol + converted.toFixed(2);
-}
+    // ===============================
+    // BUY / SELL MODALS
+    // ===============================
+    const tradeBackdrop = document.getElementById("tradeBackdrop");
+    const tradeClose = document.getElementById("tradeClose");
+    const tradeAssetLabel = document.getElementById("tradeAssetLabel");
+    const tradePriceEl = document.getElementById("tradePrice");
+    const tradeCashAvailableEl = document.getElementById("tradeCashAvailable");
+    const tradeQtyInput = document.getElementById("tradeQty");
+    const tradeCostEl = document.getElementById("tradeCost");
+    const tradeQtySummary = document.getElementById("tradeQtySummary");
+    const tradeSymbolSummary = document.getElementById("tradeSymbolSummary");
+    const tradeError = document.getElementById("tradeError");
+    const tradeSubmit = document.getElementById("tradeSubmit");
 
-// ===============================
-// REFRESH LOOP
-// ===============================
-setInterval(fetchBinancePrices, 1000);
-fetchBinancePrices();
-</script>
+    let currentBuySymbol = null;
+
+    tradeClose.addEventListener("click", closeTradeModal);
+    tradeBackdrop.addEventListener("click", (e) => {
+      if (e.target === tradeBackdrop) closeTradeModal();
+    });
+
+    function openTradeModal(symbol) {
+      currentBuySymbol = symbol;
+      const m = MARKET_DATA[symbol];
+      if (!m) return;
+
+      tradeAssetLabel.innerHTML = `
+        You are opening a simulated <strong>BUY</strong> position in
+        <strong>${symbol}/USDT</strong>.`;
+      tradePriceEl.textContent = formatCurrency(m.price);
+      tradeSymbolSummary.textContent = symbol;
+      tradeQtyInput.value = 1;
+      tradeError.textContent = "";
+
+      const cashUSD = USER.mode === "normal" ? USER.balanceUSD : USER.testBalanceUSD;
+      tradeCashAvailableEl.textContent = formatCurrency(cashUSD);
+      updateTradeCost();
+
+      tradeBackdrop.classList.add("show");
+    }
+
+    function closeTradeModal() {
+      tradeBackdrop.classList.remove("show");
+      currentBuySymbol = null;
+    }
+
+    document.querySelectorAll('.trade-qty-input button[data-q]').forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tradeQtyInput.value = btn.getAttribute("data-q");
+        updateTradeCost();
+      });
+    });
+
+    tradeQtyInput.addEventListener("input", updateTradeCost);
+
+    function updateTradeCost() {
+      if (!currentBuySymbol) return;
+      const m = MARKET_DATA[currentBuySymbol];
+      if (!m) return;
+      const qty = Math.max(0, parseFloat(tradeQtyInput.value || "0"));
+      const costUSD = qty * m.price;
+      tradeQtySummary.textContent = qty.toFixed(4);
+      tradeCostEl.textContent = formatCurrency(costUSD);
+    }
+
+    tradeSubmit.addEventListener("click", () => {
+      if (!currentBuySymbol) return;
+      const m = MARKET_DATA[currentBuySymbol];
+      if (!m) return;
+      const qty = Math.max(0, parseFloat(tradeQtyInput.value || "0"));
+      if (qty <= 0) return;
+
+      const costUSD = qty * m.price;
+      const cashUSD = USER.mode === "normal" ? USER.balanceUSD : USER.testBalanceUSD;
+
+      // if cannot afford full cost, do nothing at all (silent)
+      if (costUSD > cashUSD + 1e-8) {
+        return;
+      }
+
+      const now = Date.now();
+      const autoCloseAt = now + 30 * 24 * 60 * 60 * 1000;
+
+      const position = {
+        id: now + "-" + currentBuySymbol,
+        symbol: currentBuySymbol,
+        qty,
+        entry: m.price,
+        openedAt: now,
+        autoCloseAt
+      };
+
+      if (USER.mode === "normal") {
+        USER.balanceUSD -= costUSD;
+      } else {
+        USER.testBalanceUSD -= costUSD;
+      }
+
+      USER.positions.push(position);
+      USER.trades += 1;
+      saveState();
+      closeTradeModal();
+      updateUI();
+    });
+
+    // SELL MODAL
+    const sellBackdrop = document.getElementById("sellBackdrop");
+    const sellClose = document.getElementById("sellClose");
+    const sellAssetLabel = document.getElementById("sellAssetLabel");
+    const sellPriceEl = document.getElementById("sellPrice");
+    const sellTotalQtyEl = document.getElementById("sellTotalQty");
+    const sellQtyInput = document.getElementById("sellQty");
+    const sellQtySummary = document.getElementById("sellQtySummary");
+    const sellSymbolSummary = document.getElementById("sellSymbolSummary");
+    const sellError = document.getElementById("sellError");
+    const sellSubmit = document.getElementById("sellSubmit");
+
+    let currentSellSymbol = null;
+
+    sellClose.addEventListener("click", closeSellModal);
+    sellBackdrop.addEventListener("click", (e) => {
+      if (e.target === sellBackdrop) closeSellModal();
+    });
+
+    function openSellModal(symbol) {
+      currentSellSymbol = symbol;
+      const m = MARKET_DATA[symbol];
+      if (!m) return;
+
+      const totalQty = USER.positions
+        .filter((p) => p.symbol === symbol)
+        .reduce((s, p) => s + p.qty, 0);
+
+      sellAssetLabel.innerHTML = `
+        You are closing simulated <strong>BUY</strong> positions in
+        <strong>${symbol}/USDT</strong>.`;
+      sellPriceEl.textContent = formatCurrency(m.price);
+      sellTotalQtyEl.textContent = totalQty.toFixed(4);
+      sellQtyInput.value = totalQty > 0 ? totalQty.toFixed(4) : 0;
+      sellQtySummary.textContent = sellQtyInput.value;
+      sellSymbolSummary.textContent = symbol;
+      sellError.textContent = "";
+
+      sellBackdrop.classList.add("show");
+    }
+
+    function closeSellModal() {
+      sellBackdrop.classList.remove("show");
+      currentSellSymbol = null;
+    }
+
+    document.querySelectorAll('.trade-qty-input button[data-sq]').forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!currentSellSymbol) return;
+        const totalQty = USER.positions
+          .filter((p) => p.symbol === currentSellSymbol)
+          .reduce((s, p) => s + p.qty, 0);
+        const pct = parseInt(btn.getAttribute("data-sq"), 10) / 100;
+        const qty = totalQty * pct;
+        sellQtyInput.value = qty.toFixed(4);
+        sellQtySummary.textContent = sellQtyInput.value;
+      });
+    });
+
+    sellQtyInput.addEventListener("input", () => {
+      const q = Math.max(0, parseFloat(sellQtyInput.value || "0"));
+      sellQtyInput.value = q;
+      sellQtySummary.textContent = q;
+    });
+
+    sellSubmit.addEventListener("click", () => {
+      if (!currentSellSymbol) return;
+      const m = MARKET_DATA[currentSellSymbol];
+      if (!m) return;
+
+      const totalQty = USER.positions
+        .filter((p) => p.symbol === currentSellSymbol)
+        .reduce((s, p) => s + p.qty, 0);
+
+      let qtyToClose = Math.max(0, parseFloat(sellQtyInput.value || "0"));
+      if (qtyToClose <= 0 || qtyToClose > totalQty + 1e-8) {
+        // soft fail, do nothing
+        return;
+      }
+
+      let remaining = qtyToClose;
+      const newPositions = [];
+      let cashBackUSD = 0;
+
+      for (const p of USER.positions) {
+        if (p.symbol !== currentSellSymbol || remaining <= 0) {
+          newPositions.push(p);
+          continue;
+        }
+        const closing = Math.min(remaining, p.qty);
+        const sellValue = closing * m.price;
+        const costValue = closing * p.entry;
+        const pnl = sellValue - costValue;
+
+        cashBackUSD += sellValue; // full proceeds back
+        remaining -= closing;
+
+        if (closing < p.qty - 1e-8) {
+          newPositions.push({
+            ...p,
+            qty: p.qty - closing
+          });
+        }
+      }
+
+      USER.positions = newPositions;
+      if (USER.mode === "normal") {
+        USER.balanceUSD += cashBackUSD;
+      } else {
+        USER.testBalanceUSD += cashBackUSD;
+      }
+      USER.trades += 1;
+      saveState();
+      closeSellModal();
+      updateUI();
+    });
+
+    // ===============================
+    // AUTO-EXPIRY (30 DAYS)
+    // ===============================
+    function autoCloseExpiredPositions() {
+      const now = Date.now();
+      const kept = [];
+      let cashBackUSD = 0;
+
+      for (const p of USER.positions) {
+        if (now >= p.autoCloseAt) {
+          const m = MARKET_DATA[p.symbol];
+          if (!m) continue;
+          const sellValue = p.qty * m.price;
+          cashBackUSD += sellValue;
+        } else {
+          kept.push(p);
+        }
+      }
+
+      USER.positions = kept;
+      if (cashBackUSD > 0) {
+        if (USER.mode === "normal") USER.balanceUSD += cashBackUSD;
+        else USER.testBalanceUSD += cashBackUSD;
+      }
+      if (cashBackUSD > 0) saveState();
+    }
+
+    setInterval(autoCloseExpiredPositions, 30 * 1000); // demo: check often
+
+    // ===============================
+    // MARKETS FILTER (TABS)
+    // ===============================
+    const marketsFilters = document.getElementById("marketsFilters");
+
+    marketsFilters.addEventListener("click", (e) => {
+      const pill = e.target.closest(".pill");
+      if (!pill) return;
+      marketsFilters.querySelectorAll(".pill").forEach((p) =>
+        p.classList.remove("active")
+      );
+      pill.classList.add("active");
+      const filter = pill.dataset.filter;
+      renderFilteredMarkets(filter);
+    });
+
+    function renderFilteredMarkets(filter) {
+      const grid = document.getElementById("marketsPageGrid");
+      grid.innerHTML = "";
+
+      let list = [...MARKET_LIST];
+
+      if (filter === "volatile") {
+        list = list.slice(0, 50);
+      } else if (filter === "core") {
+        list = list.filter((m) => SYMBOL_GROUPS.core.includes(m.symbol));
+      } else if (filter === "alt") {
+        list = list.filter((m) => SYMBOL_GROUPS.infra.includes(m.symbol) || SYMBOL_GROUPS.altcoins?.includes(m.symbol));
+      } else if (filter === "defi") {
+        list = list.filter((m) => SYMBOL_GROUPS.defi.includes(m.symbol));
+      } else if (filter === "meme") {
+        list = list.filter((m) => SYMBOL_GROUPS.meme.includes(m.symbol));
+      } else if (filter === "stable") {
+        list = list.filter((m) => SYMBOL_GROUPS.stable.includes(m.symbol));
+      } else if (filter === "infra") {
+        list = list.filter((m) => SYMBOL_GROUPS.infra.includes(m.symbol));
+      } else if (filter === "ai") {
+        list = list.filter((m) => SYMBOL_GROUPS.ai.includes(m.symbol));
+      }
+
+      list.forEach((m) => {
+        const card = document.createElement("div");
+        card.className = "market-card";
+
+        card.innerHTML = `
+          <div class="market-card-header">
+            <div>
+              <div class="market-card-name">${m.symbol}</div>
+              <div class="market-card-symbol">${m.symbol}/USDT</div>
+            </div>
+            <div>
+              <div class="market-card-price">${formatCurrency(m.price)}</div>
+              <div class="market-card-change ${m.change < 0 ? "negative" : "positive"}">
+                ${m.change.toFixed(2)}%
+              </div>
+            </div>
+          </div>
+          <div class="market-card-chart">
+            <canvas class="market-card-canvas" data-symbol="${m.symbol}"></canvas>
+          </div>
+          <div class="markets-page-actions">
+            <button class="btn-buy-green" data-buy="${m.symbol}">Buy</button>
+            <button class="btn-sell-red" data-sell="${m.symbol}">Sell</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      drawAllMiniCharts();
+
+      grid.querySelectorAll("[data-buy]").forEach((btn) => {
+        btn.addEventListener("click", () => openTradeModal(btn.dataset.buy));
+      });
+      grid.querySelectorAll("[data-sell]").forEach((btn) => {
+        btn.addEventListener("click", () => openSellModal(btn.dataset.sell));
+      });
+    }
+
+    // ===============================
+    // GLOBAL BUY/SELL BUTTON BINDING
+    // ===============================
+    function bindGlobalBuySellButtons() {
+      document.querySelectorAll("[data-buy]").forEach((btn) => {
+        btn.addEventListener("click", () => openTradeModal(btn.dataset.buy));
+      });
+      document.querySelectorAll("[data-sell]").forEach((btn) => {
+        btn.addEventListener("click", () => openSellModal(btn.dataset.sell));
+      });
+    }
+
+    // ===============================
+    // FETCH PRICES FROM BINANCE
+    // ===============================
+    async function fetchBinancePrices() {
+      try {
+        const res = await fetch("https://api.binance.com/api/v3/ticker/24hr");
+        const data = await res.json();
+
+        MARKET_DATA = {};
+        MARKET_LIST = [];
+
+        data.forEach((item) => {
+          if (!item.symbol.endsWith("USDT")) return;
+          const sym = item.symbol.replace("USDT", "");
+          if (!ALL_SYMBOLS.includes(sym)) return;
+
+          const price = parseFloat(item.lastPrice);
+          const change = parseFloat(item.priceChangePercent);
+
+          MARKET_DATA[sym] = { symbol: sym, price, change };
+          MARKET_LIST.push({ symbol: sym, price, change });
+        });
+
+        MARKET_LIST.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
+
+        updateHeroIfNeeded();
+        updatePopularMarketsSidebar();
+        updateTickerBar();
+        updateMarketsPageInitial();
+        updatePortfolioValuesAndAlloc();
+        autoCloseExpiredPositions();
+        bindGlobalBuySellButtons();
+      } catch (err) {
+        console.error("Binance fetch error", err);
+      }
+    }
+
+    function updateHeroIfNeeded() {
+      if (!MARKET_DATA[HERO_SYMBOL]) {
+        HERO_SYMBOL = MARKET_LIST[0]?.symbol || "BTC";
+      }
+      const d = MARKET_DATA[HERO_SYMBOL];
+      if (!d) return;
+      document.getElementById("heroAssetName").textContent = d.symbol;
+      document.getElementById("heroAssetSymbol").textContent = d.symbol + "/USDT";
+      document.getElementById("assetPrice").textContent = formatCurrency(d.price);
+      const ch = document.getElementById("assetChange");
+      ch.textContent = d.change.toFixed(2) + "% (24h)";
+      ch.classList.toggle("negative", d.change < 0);
+      drawHeroChart();
+    }
+
+    async function drawHeroChart() {
+      const d = MARKET_DATA[HERO_SYMBOL];
+      if (!d) return;
+      const canvas = document.getElementById("heroChartCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+
+      const intervalMap = {
+        "1D": "1h",
+        "1W": "4h",
+        "1M": "1d",
+        "6M": "1d",
+        "1Y": "1w"
+      };
+      const interval = intervalMap[HERO_TIMEFRAME] || "1h";
+
+      let prices = [];
+      try {
+        const res = await fetch(
+          `https://api.binance.com/api/v3/klines?symbol=${HERO_SYMBOL}USDT&interval=${interval}&limit=120`
+        );
+        const data = await res.json();
+        prices = data.map((c) => parseFloat(c[4]));
+      } catch {
+        prices = [];
+      }
+
+      if (prices.length < 2) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      const range = max - min || 1;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = prices[prices.length - 1] >= prices[0] ? "#27e49b" : "#ff6b6b";
+
+      prices.forEach((p, i) => {
+        const x = (i / (prices.length - 1)) * canvas.width;
+        const y =
+          canvas.height - ((p - min) / range) * (canvas.height * 0.8) - canvas.height * 0.1;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    document.querySelectorAll("#heroTimeframeButtons button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#heroTimeframeButtons button").forEach((b) =>
+          b.classList.remove("active")
+        );
+        btn.classList.add("active");
+        HERO_TIMEFRAME = btn.dataset.tf;
+        drawHeroChart();
+      });
+    });
+
+    function updatePopularMarketsSidebar() {
+      const list = document.getElementById("marketsList");
+      list.innerHTML = "";
+      MARKET_LIST.slice(0, 20).forEach((m) => {
+        const row = document.createElement("div");
+        row.className = "market-row";
+        row.innerHTML = `
+          <div class="market-name">
+            <strong>${m.symbol}</strong>
+            <span class="market-symbol">${m.symbol}/USDT</span>
+          </div>
+          <div>${formatCurrency(m.price)}</div>
+          <div class="market-change ${m.change < 0 ? "negative" : "positive"}">
+            ${m.change.toFixed(2)}%
+          </div>
+          <div class="market-actions">
+            <button class="btn-buy-green" data-buy="${m.symbol}">Buy</button>
+            <button class="btn-sell-red" data-sell="${m.symbol}">Sell</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function updateTickerBar() {
+      const track = document.getElementById("tickerTrack");
+      track.innerHTML = "";
+      MARKET_LIST.slice(0, 40).forEach((m) => {
+        const item = document.createElement("div");
+        item.className = "ticker-item";
+        item.innerHTML = `
+          <span class="ticker-symbol">${m.symbol}</span>
+          <span class="ticker-price">${formatCurrency(m.price)}</span>
+          <span class="ticker-change ${m.change < 0 ? "negative" : "positive"}">
+            ${m.change.toFixed(2)}%
+          </span>
+        `;
+        track.appendChild(item);
+      });
+    }
+
+    function updateMarketsPageInitial() {
+      renderFilteredMarkets("all");
+    }
+
+    async function drawAllMiniCharts() {
+      const canvases = document.querySelectorAll(".market-card-canvas");
+      for (const canvas of canvases) {
+        const sym = canvas.dataset.symbol;
+        const ctx = canvas.getContext("2d");
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        let prices = [];
+        try {
+          const res = await fetch(
+            `https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=1h&limit=60`
+          );
+          const data = await res.json();
+          prices = data.map((c) => parseFloat(c[4]));
+        } catch {
+          prices = [];
+        }
+        if (prices.length < 2) continue;
+
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        const range = max - min || 1;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = prices[prices.length - 1] >= prices[0] ? "#27e49b" : "#ff6b6b";
+
+        prices.forEach((p, i) => {
+          const x = (i / (prices.length - 1)) * canvas.width;
+          const y =
+            canvas.height - ((p - min) / range) * (canvas.height * 0.8) - canvas.height * 0.1;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      }
+    }
+
+    // ===============================
+    // PORTFOLIO & ALLOCATION
+    // ===============================
+    function updatePortfolioValuesAndAlloc() {
+      let totalUSD = 0;
+      const buckets = {
+        core: 0,
+        alt: 0,
+        defi: 0,
+        meme: 0,
+        stable: 0,
+        infra: 0,
+        ai: 0,
+        other: 0
+      };
+
+      USER.positions.forEach((p) => {
+        const m = MARKET_DATA[p.symbol];
+        if (!m) return;
+        const value = p.qty * m.price;
+        totalUSD += value;
+
+        const group =
+          SYMBOL_GROUPS.core.includes(p.symbol) ? "core" :
+          SYMBOL_GROUPS.meme.includes(p.symbol) ? "meme" :
+          SYMBOL_GROUPS.defi.includes(p.symbol) ? "defi" :
+          SYMBOL_GROUPS.stable.includes(p.symbol) ? "stable" :
+          SYMBOL_GROUPS.infra.includes(p.symbol) ? "infra" :
+          SYMBOL_GROUPS.ai.includes(p.symbol) ? "ai" :
+          "other";
+
+        buckets[group] += value;
+      });
+
+      const cashUSD = USER.mode === "normal" ? USER.balanceUSD : USER.testBalanceUSD;
+      const portfolioValueUSD = totalUSD + cashUSD;
+
+      document.getElementById("portfolioValue").textContent = formatCurrency(portfolioValueUSD);
+      document.getElementById("equityValue").textContent = formatCurrency(portfolioValueUSD);
+      document.getElementById("availableMarginValue").textContent = formatCurrency(cashUSD);
+      document.getElementById("usedMarginValue").textContent = formatCurrency(totalUSD);
+      document.getElementById("positionsCount").textContent = USER.positions.length;
+
+      const risk = portfolioValueUSD > 0 ? totalUSD / portfolioValueUSD : 0;
+      document.getElementById("riskUsageFill").style.width = (risk * 100).toFixed(0) + "%";
+      document.getElementById("riskUsageLabel").textContent = (risk * 100).toFixed(0) + "%";
+
+      document.getElementById("allocCenterValue").textContent =
+        formatCurrency(portfolioValueUSD);
+
+      const riskStatusText = document.getElementById("riskStatusText");
+      if (USER.positions.length === 0) riskStatusText.textContent = "No open positions";
+      else if (risk < 0.3) riskStatusText.textContent = "Lightly invested";
+      else if (risk < 0.7) riskStatusText.textContent = "Balanced exposure";
+      else riskStatusText.textContent = "Heavily invested";
+    }
+
+    // ===============================
+    // GLOBAL UI UPDATE
+    // ===============================
+    function updateUI() {
+      currencyLabelEl.textContent = `Display currency: ${USER.currency}`;
+      updateModeUI();
+
+      // Header
+      if (USER.loggedIn) {
+        navUser.innerHTML = `Signed in as <span>${USER.displayName}</span>`;
+        btnLogin.style.display = "none";
+        btnLogout.style.display = "inline-flex";
+      } else {
+        navUser.innerHTML = `<span>Guest</span>`;
+        btnLogin.style.display = "inline-flex";
+        btnLogout.style.display = "none";
+      }
+
+      // Account label
+      accountTypeLabel.textContent =
+        USER.mode === "test"
+          ? "Test mode · 1 000 000 internal balance"
+          : USER.loggedIn
+          ? "Normal mode · Profile connected"
+          : "Normal mode · Guest";
+
+      // Portfolio / equity & alloc
+      updatePortfolioValuesAndAlloc();
+
+      // Profile
+      if (!USER.loggedIn) {
+        profileGuestHint.style.display = "block";
+        profileOverviewDetails.style.display = "none";
+      } else {
+        profileGuestHint.style.display = "none";
+        profileOverviewDetails.style.display = "block";
+        profileDisplayName.textContent = USER.displayName;
+        profileEmail.textContent = USER.email || "";
+        profileBalance.textContent = formatCurrency(
+          USER.mode === "normal" ? USER.balanceUSD : USER.testBalanceUSD
+        );
+
+        let totalUSD = 0;
+        USER.positions.forEach((p) => {
+          const m = MARKET_DATA[p.symbol];
+          if (!m) return;
+          totalUSD += p.qty * m.price;
+        });
+        profilePortfolio.textContent = formatCurrency(totalUSD);
+        profileOpenPositions.textContent = USER.positions.length;
+        profileSessions.textContent = USER.sessions;
+        profileTrades.textContent = USER.trades;
+      }
+
+      displayNameInput.value = USER.displayName === "Guest" ? "" : USER.displayName;
+    }
+
+    // ===============================
+    // INITIALISE
+    // ===============================
+    let MARKET_LIST = [];
+
+    function updatePopularMarketsSidebar() {
+      const list = document.getElementById("marketsList");
+      list.innerHTML = "";
+      MARKET_LIST.slice(0, 20).forEach((m) => {
+        const row = document.createElement("div");
+        row.className = "market-row";
+        row.innerHTML = `
+          <div class="market-name">
+            <strong>${m.symbol}</strong>
+            <span class="market-symbol">${m.symbol}/USDT</span>
+          </div>
+          <div>${formatCurrency(m.price)}</div>
+          <div class="market-change ${m.change < 0 ? "negative" : "positive"}">
+            ${m.change.toFixed(2)}%
+          </div>
+          <div class="market-actions">
+            <button class="btn-buy-green" data-buy="${m.symbol}">Buy</button>
+            <button class="btn-sell-red" data-sell="${m.symbol}">Sell</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function updateTickerBar() {
+      const track = document.getElementById("tickerTrack");
+      track.innerHTML = "";
+      MARKET_LIST.slice(0, 40).forEach((m) => {
+        const item = document.createElement("div");
+        item.className = "ticker-item";
+        item.innerHTML = `
+          <span class="ticker-symbol">${m.symbol}</span>
+          <span class="ticker-price">${formatCurrency(m.price)}</span>
+          <span class="ticker-change ${m.change < 0 ? "negative" : "positive"}">
+            ${m.change.toFixed(2)}%
+          </span>
+        `;
+        track.appendChild(item);
+      });
+    }
+
+    function updateMarketsPageInitial() {
+      renderFilteredMarkets("all");
+    }
+
+    async function refreshAll() {
+      await fetchBinancePrices();
+      updateUI();
+    }
+
+    // 1 second refresh
+    setInterval(refreshAll, 1000);
+    refreshAll();
+  </script>
+</body>
+</html>
+
+
+
+
+
