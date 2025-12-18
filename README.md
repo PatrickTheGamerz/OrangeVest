@@ -193,6 +193,26 @@
       color: var(--text-main);
     }
 
+    .btn-buy-green {
+      background: radial-gradient(circle at top left, #27e49b, #16b16b);
+      border: 1px solid rgba(39, 228, 155, 0.8);
+      box-shadow: 0 0 12px rgba(39, 228, 155, 0.25);
+      color: #020309;
+    }
+
+    .btn-sell-red {
+      background: radial-gradient(circle at top left, #ff7a7a, #ff3b3b);
+      border: 1px solid rgba(255, 122, 122, 0.9);
+      box-shadow: 0 0 12px rgba(255, 122, 122, 0.25);
+      color: #fff8f8;
+    }
+
+    .btn-buy-green:hover,
+    .btn-sell-red:hover {
+      transform: translateY(-0.5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+    }
+
     .main-grid {
       display: grid;
       grid-template-columns: 1.35fr 1fr;
@@ -506,24 +526,6 @@
       justify-content: flex-end;
     }
 
-    .btn-buy,
-    .btn-sell {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: var(--radius-pill);
-      border: none;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    .btn-buy {
-      background: linear-gradient(135deg, #25d586, #16b16b);
-    }
-
-    .btn-sell {
-      background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
-    }
-
     .balance-row {
       display: flex;
       justify-content: space-between;
@@ -795,7 +797,8 @@
       color: var(--text-muted);
     }
 
-    .modal-field input {
+    .modal-field input,
+    .modal-field select {
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: #060b14;
@@ -805,7 +808,8 @@
       outline: none;
     }
 
-    .modal-field input:focus {
+    .modal-field input:focus,
+    .modal-field select:focus {
       border-color: rgba(255, 159, 67, 0.8);
       box-shadow: 0 0 0 1px rgba(255, 159, 67, 0.5);
     }
@@ -939,11 +943,17 @@
     .pos-sell-btn {
       border-radius: 999px;
       border: none;
-      background: linear-gradient(135deg, #ff6b6b, #ff3b3b);
+      background: radial-gradient(circle at top left, #ff7a7a, #ff3b3b);
       color: #fff;
       font-size: 10px;
       padding: 3px 8px;
       cursor: pointer;
+      box-shadow: 0 0 8px rgba(255, 122, 122, 0.4);
+    }
+
+    .pos-sell-btn:hover {
+      transform: translateY(-0.5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
     }
 
     .section {
@@ -1176,6 +1186,29 @@
     .settings-field input:focus {
       border-color: rgba(255, 159, 67, 0.8);
       box-shadow: 0 0 0 1px rgba(255, 159, 67, 0.5);
+    }
+
+    .mode-toggle {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .mode-toggle button {
+      flex: 1;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(7, 10, 18, 0.98);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+
+    .mode-toggle button.active {
+      border-color: rgba(255, 159, 67, 0.9);
+      color: var(--accent-strong);
+      background: rgba(255, 159, 67, 0.14);
     }
 
     .settings-error {
@@ -1428,6 +1461,7 @@
                 <h2>Account overview</h2>
                 <span id="accountTypeLabel">Guest · Connect to start tracking</span>
               </div>
+              <span id="currencyLabel" style="font-size:11px; color:var(--accent-strong);"></span>
             </div>
 
             <div class="balance-row">
@@ -1526,7 +1560,8 @@
               <span class="section-title-pill">Your trading footprint</span>
             </div>
             <p class="section-subtitle" id="profileSubtitle">
-              Connect an account to keep balances, open trades and simple statistics attached to your profile.
+              Connect an account or switch to Test mode with 1 000 000 balance. Currency and mode apply to the whole
+              platform.
             </p>
           </div>
         </div>
@@ -1535,7 +1570,7 @@
           <div class="profile-card">
             <h3>Account snapshot</h3>
             <p id="profileGuestHint">
-              You're currently browsing as a guest. Sign in or create an account to save your sessions.
+              You're currently browsing as a guest in Normal mode. Sign in or switch to Test mode to explore further.
             </p>
             <div id="profileOverviewDetails" style="display:none; margin-top:8px;">
               <div class="profile-row">
@@ -1576,12 +1611,20 @@
           </div>
 
           <div class="profile-card">
-            <h3>Settings</h3>
+            <h3>Settings & modes</h3>
             <p style="margin-bottom:6px;">
-              Update how OrangeVest shows your profile.
+              Tune how OrangeVest behaves for you: account mode, display name, password and display currency.
             </p>
 
-            <div class="settings-field">
+            <div class="mode-toggle">
+              <button id="modeNormalBtn" class="active">Normal mode</button>
+              <button id="modeTestBtn">Test mode</button>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;" id="modeDescription">
+              Normal: starting balance 100, trades and balance are saved to your profile.
+            </div>
+
+            <div class="settings-field" style="margin-top:8px;">
               <label for="displayNameInput">Display name</label>
               <input id="displayNameInput" type="text" placeholder="Your name / nickname" />
             </div>
@@ -1754,7 +1797,7 @@
 
         <div class="trade-error" id="tradeError"></div>
 
-        <button class="btn btn-primary" style="width:100%; margin-top:6px;" id="tradeSubmit">
+        <button class="btn btn-buy-green" style="width:100%; margin-top:6px;" id="tradeSubmit">
           Confirm buy
         </button>
       </div>
@@ -1802,8 +1845,43 @@
 
         <div class="trade-error" id="sellError"></div>
 
-        <button class="btn btn-primary" style="width:100%; margin-top:6px;" id="sellSubmit">
+        <button class="btn btn-sell-red" style="width:100%; margin-top:6px;" id="sellSubmit">
           Confirm sell
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGE FUNDS / CURRENCY MODAL -->
+  <div class="backdrop" id="fundsBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Manage funds & currency</h2>
+        <button class="modal-close" id="fundsClose">×</button>
+      </div>
+      <div>
+        <div class="modal-field">
+          <label for="currencySelect">Display currency</label>
+          <select id="currencySelect">
+            <option value="USD">$ USD</option>
+            <option value="EUR">€ EUR</option>
+            <option value="PLN">zł PLN</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label>Approx. FX rates</label>
+          <div style="font-size:11px; color:var(--text-muted);">
+            1 USD ≈ 0.92 EUR · 4.10 PLN (static demo rates)
+          </div>
+        </div>
+        <div class="modal-field">
+          <label>Note</label>
+          <div style="font-size:11px; color:var(--text-muted);">
+            Changing display currency affects all balances and P&L on OrangeVest. Internal accounting stays in USD.
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%; margin-top:8px;" id="fundsSave">
+          Apply currency
         </button>
       </div>
     </div>
@@ -1833,12 +1911,76 @@
     ];
 
     // ---------------------------
-    // STORAGE & USER MODEL
+    // CURRENCY SYSTEM
+    // ---------------------------
+
+    const currencyLabelEl = document.getElementById("currencyLabel");
+    const fundsBackdrop = document.getElementById("fundsBackdrop");
+    const fundsClose = document.getElementById("fundsClose");
+    const fundsSave = document.getElementById("fundsSave");
+    const currencySelect = document.getElementById("currencySelect");
+    const manageFundsBtn = document.getElementById("manageFundsBtn");
+
+    const CURRENCY_RATES = {
+      USD: 1,
+      EUR: 0.92,
+      PLN: 4.1
+    };
+
+    let appCurrency = "USD";
+
+    function openFundsModal() {
+      fundsBackdrop.classList.add("show");
+      currencySelect.value = appCurrency;
+    }
+
+    function closeFundsModal() {
+      fundsBackdrop.classList.remove("show");
+    }
+
+    manageFundsBtn.addEventListener("click", () => {
+      openFundsModal();
+    });
+
+    fundsClose.addEventListener("click", closeFundsModal);
+    fundsBackdrop.addEventListener("click", (e) => {
+      if (e.target === fundsBackdrop) closeFundsModal();
+    });
+
+    fundsSave.addEventListener("click", () => {
+      appCurrency = currencySelect.value || "USD";
+      closeFundsModal();
+      updateUI();
+    });
+
+    function formatMoneyDisplay(amountUSD) {
+      const rate = CURRENCY_RATES[appCurrency] || 1;
+      const value = amountUSD * rate;
+      let prefix = "$";
+      if (appCurrency === "EUR") prefix = "€";
+      if (appCurrency === "PLN") prefix = "zł";
+      let formatted;
+      if (value < 1) formatted = value.toFixed(2);
+      else if (value < 1000) formatted = value.toFixed(2);
+      else formatted = value.toFixed(0);
+      return `${prefix}${formatted}`;
+    }
+
+    // ---------------------------
+    // STORAGE & USER MODEL (NORMAL/TEST)
     // ---------------------------
 
     const STORAGE_KEY_USERS = "orangevest_users";
     const STORAGE_KEY_SESSION = "orangevest_session";
     const NORMAL_START_BALANCE = 100;
+    const TEST_START_BALANCE = 1000000;
+
+    const modeNormalBtn = document.getElementById("modeNormalBtn");
+    const modeTestBtn = document.getElementById("modeTestBtn");
+    const modeDescription = document.getElementById("modeDescription");
+
+    let mode = "normal"; // "normal" | "test"
+    let testState = null; // separate non-persistent state
 
     function loadUsers() {
       try {
@@ -1896,29 +2038,39 @@
 
     function getActiveState() {
       const u = getCurrentUserStored();
-      return u
-        ? {
-            balance: u.balance,
-            usedMargin: u.usedMargin,
-            positions: u.positions || [],
-            history: u.history || []
-          }
-        : null;
+      if (!u && mode === "normal") return null;
+      if (mode === "test") {
+        if (!testState) {
+          testState = {
+            balance: TEST_START_BALANCE,
+            usedMargin: 0,
+            positions: [],
+            history: []
+          };
+        }
+        return testState;
+      }
+      return {
+        balance: u.balance,
+        usedMargin: u.usedMargin,
+        positions: u.positions || [],
+        history: u.history || []
+      };
     }
 
     function saveActiveState(state) {
-      const u = getCurrentUserStored();
-      if (!u) return;
-      u.balance = state.balance;
-      u.usedMargin = state.usedMargin;
-      u.positions = state.positions;
-      u.history = state.history;
-      setCurrentUserStored(u);
+      if (mode === "test") {
+        testState = state;
+      } else {
+        const u = getCurrentUserStored();
+        if (!u) return;
+        u.balance = state.balance;
+        u.usedMargin = state.usedMargin;
+        u.positions = state.positions;
+        u.history = state.history;
+        setCurrentUserStored(u);
+      }
     }
-
-    // ---------------------------
-    // AUTH
-    // ---------------------------
 
     const authBackdrop = document.getElementById("authBackdrop");
     const authClose = document.getElementById("authClose");
@@ -1932,13 +2084,12 @@
     const authPassword = document.getElementById("authPassword");
     const authError = document.getElementById("authError");
     const authSubmit = document.getElementById("authSubmit");
-
     let authMode = "signin";
 
-    function openAuthModal(mode = "signin") {
-      authMode = mode;
+    function openAuthModal(modeChoice = "signin") {
+      authMode = modeChoice;
       authBackdrop.classList.add("show");
-      setAuthMode(mode);
+      setAuthMode(modeChoice);
       authEmail.value = "";
       authPassword.value = "";
       authError.textContent = "";
@@ -1949,9 +2100,9 @@
       authBackdrop.classList.remove("show");
     }
 
-    function setAuthMode(mode) {
-      authMode = mode;
-      const isSignIn = mode === "signin";
+    function setAuthMode(modeChoice) {
+      authMode = modeChoice;
+      const isSignIn = modeChoice === "signin";
       tabSignIn.classList.toggle("active", isSignIn);
       tabSignUp.classList.toggle("active", !isSignIn);
       authTitle.textContent = isSignIn ? "Sign in to continue" : "Create a new OrangeVest profile";
@@ -2002,6 +2153,7 @@
         users[email] = user;
         saveUsers(users);
         saveSession({ email });
+        testState = null;
         closeAuthModal();
         updateUI();
       } else {
@@ -2014,6 +2166,7 @@
         users[email] = user;
         saveUsers(users);
         saveSession({ email });
+        testState = null;
         closeAuthModal();
         updateUI();
       }
@@ -2021,11 +2174,40 @@
 
     btnLogout.addEventListener("click", () => {
       saveSession(null);
+      testState = null;
       updateUI();
     });
 
     function getCurrentUser() {
       return getCurrentUserStored();
+    }
+
+    modeNormalBtn.addEventListener("click", () => {
+      mode = "normal";
+      testState = null;
+      updateModeUI();
+      updateUI();
+    });
+
+    modeTestBtn.addEventListener("click", () => {
+      mode = "test";
+      testState = {
+        balance: TEST_START_BALANCE,
+        usedMargin: 0,
+        positions: [],
+        history: []
+      };
+      updateModeUI();
+      updateUI();
+    });
+
+    function updateModeUI() {
+      modeNormalBtn.classList.toggle("active", mode === "normal");
+      modeTestBtn.classList.toggle("active", mode === "test");
+      modeDescription.textContent =
+        mode === "normal"
+          ? "Normal: starting balance 100 (base currency), trades and balance are saved to your profile."
+          : "Test: balance 1 000 000, trades and balance reset when you reload.";
     }
 
     // ---------------------------
@@ -2052,7 +2234,7 @@
     navButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const target = btn.dataset.section;
-        if (target !== "trading" && !getCurrentUser()) {
+        if (target !== "trading" && !getCurrentUser() && mode === "normal") {
           openAuthModal("signin");
           return;
         }
@@ -2062,7 +2244,7 @@
 
     const viewAllMarketsBtn = document.getElementById("viewAllMarketsBtn");
     viewAllMarketsBtn.addEventListener("click", () => {
-      if (!getCurrentUser()) {
+      if (!getCurrentUser() && mode === "normal") {
         openAuthModal("signin");
         return;
       }
@@ -2093,7 +2275,6 @@
     const avgLeverage = document.getElementById("avgLeverage");
     const riskStatusText = document.getElementById("riskStatusText");
     const accountTypeLabel = document.getElementById("accountTypeLabel");
-    const manageFundsBtn = document.getElementById("manageFundsBtn");
 
     const profileSubtitle = document.getElementById("profileSubtitle");
     const profileGuestHint = document.getElementById("profileGuestHint");
@@ -2115,23 +2296,18 @@
     const settingsError = document.getElementById("settingsError");
 
     // ---------------------------
-    // PROFILE SETTINGS
+    // PROFILE SETTINGS SAVE
     // ---------------------------
 
     manageFundsBtn.addEventListener("click", () => {
-      const u = getCurrentUser();
-      if (!u) {
-        openAuthModal("signin");
-        return;
-      }
-      alert("In a real app this would open deposit/withdraw options.");
+      openFundsModal();
     });
 
     saveDisplayNameBtn.addEventListener("click", () => {
       settingsSuccess.textContent = "";
       settingsError.textContent = "";
       const u = getCurrentUser();
-      if (!u) {
+      if (!u && mode === "normal") {
         settingsError.textContent = "You must be signed in to change your display name.";
         return;
       }
@@ -2140,8 +2316,10 @@
         settingsError.textContent = "Display name cannot be empty.";
         return;
       }
-      u.displayName = val;
-      setCurrentUserStored(u);
+      if (mode === "normal" && u) {
+        u.displayName = val;
+        setCurrentUserStored(u);
+      }
       settingsSuccess.textContent = "Display name updated.";
       updateUI();
     });
@@ -2151,7 +2329,7 @@
       settingsError.textContent = "";
       const u = getCurrentUser();
       if (!u) {
-        settingsError.textContent = "You must be signed in to change your password.";
+        settingsError.textContent = "You must be signed in (normal mode) to change your password.";
         return;
       }
       const newPw = newPasswordInput.value;
@@ -2171,14 +2349,11 @@
     });
 
     function formatPrice(value) {
+      if (value < 0.0001) return value.toFixed(10).replace(/0+$/, "").replace(/\.$/, "");
       if (value < 0.01) return value.toFixed(8).replace(/0+$/, "").replace(/\.$/, "");
       if (value < 1) return value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
       if (value < 1000) return value.toFixed(2);
       return value.toFixed(1);
-    }
-
-    function formatMoney(v) {
-      return "$" + v.toFixed(2);
     }
 
     // ---------------------------
@@ -2302,7 +2477,7 @@
     function drawHeroChart() {
       const m = getHeroMarket();
       if (!heroCandles || heroCandles.length < 2) return;
-      const data = heroCandles;
+      const data = heroCandles.slice(-150); // stable slice to avoid visual zoom
       const lastPrice = data[data.length - 1];
       const changePct = ((lastPrice - data[0]) / data[0]) * 100;
       const sign = changePct >= 0 ? "+" : "";
@@ -2367,18 +2542,18 @@
             ${m.change24h >= 0 ? "+" : ""}${(m.change24h || 0).toFixed(2)}%
           </div>
           <div class="market-actions">
-            <button class="btn-buy" data-market="${m.id}">Buy</button>
-            <button class="btn-sell" data-market-sell="${m.id}">Sell</button>
+            <button class="btn btn-buy-green" data-market="${m.id}">Buy</button>
+            <button class="btn btn-sell-red" data-market-sell="${m.id}">Sell</button>
           </div>
         `;
         marketsListEl.appendChild(row);
       });
 
-      marketsListEl.querySelectorAll(".btn-buy").forEach((btn) => {
+      marketsListEl.querySelectorAll("[data-market]").forEach((btn) => {
         btn.addEventListener("click", () => openTradeModal(btn.dataset.market));
       });
-      marketsListEl.querySelectorAll(".btn-sell").forEach((btn) => {
-        btn.addEventListener("click", () => openSellModal(btn.dataset["marketSell"]));
+      marketsListEl.querySelectorAll("[data-market-sell]").forEach((btn) => {
+        btn.addEventListener("click", () => openSellModal(btn.dataset.marketSell));
       });
     }
 
@@ -2421,18 +2596,18 @@
             <canvas class="market-card-canvas" data-canvas="${m.id}"></canvas>
           </div>
           <div class="markets-page-actions">
-            <button class="btn-buy" data-market="${m.id}">Buy</button>
-            <button class="btn-sell" data-market-sell="${m.id}">Sell</button>
+            <button class="btn btn-buy-green" data-market="${m.id}">Buy</button>
+            <button class="btn btn-sell-red" data-market-sell="${m.id}">Sell</button>
           </div>
         `;
         marketsPageGrid.appendChild(card);
       });
 
-      marketsPageGrid.querySelectorAll(".btn-buy").forEach((btn) => {
+      marketsPageGrid.querySelectorAll("[data-market]").forEach((btn) => {
         btn.addEventListener("click", () => openTradeModal(btn.dataset.market));
       });
-      marketsPageGrid.querySelectorAll(".btn-sell").forEach((btn) => {
-        btn.addEventListener("click", () => openSellModal(btn.dataset["marketSell"]));
+      marketsPageGrid.querySelectorAll("[data-market-sell]").forEach((btn) => {
+        btn.addEventListener("click", () => openSellModal(btn.dataset.marketSell));
       });
 
       drawAllSparklines();
@@ -2504,7 +2679,7 @@
 
     function openTradeModal(marketId) {
       const baseUser = getCurrentUser();
-      if (!baseUser) {
+      if (!baseUser && mode === "normal") {
         openAuthModal("signin");
         return;
       }
@@ -2556,31 +2731,36 @@
       tradeQtySummary.textContent = qty;
 
       const price = currentTradeMarket.lastPrice;
-      const notional = qty * price;
-      const marginRequired = notional * 0.05;
-      tradeMarginEl.textContent = "$" + marginRequired.toFixed(2);
+      const notionalUSD = qty * price;
+      const marginRequiredUSD = notionalUSD * 0.05; // 5% margin
+      tradeMarginEl.textContent = formatMoneyDisplay(marginRequiredUSD);
 
-      const freeMargin = state.balance - state.usedMargin;
-      const maxSize = freeMargin > 0 ? Math.floor((freeMargin / 0.05) / price) : 0;
+      const freeMarginUSD = state.balance - state.usedMargin;
+      const maxSize = freeMarginUSD > 0 ? Math.floor((freeMarginUSD / 0.05) / price) : 0;
       tradeMaxSizeEl.textContent = `${maxSize} units`;
     }
 
     tradeSubmit.addEventListener("click", () => {
       const state = getActiveState();
       if (!state || !currentTradeMarket) {
-        tradeError.textContent = "You must be logged in to trade.";
+        // if not logged in or in test state, do nothing (silent)
         return;
       }
       const qty = Math.max(1, parseInt(tradeQtyInput.value || "1", 10));
       const price = currentTradeMarket.lastPrice;
-      const notional = qty * price;
-      const marginRequired = notional * 0.05;
+      const notionalUSD = qty * price;
+      const marginRequiredUSD = notionalUSD * 0.05;
 
-      const freeMargin = state.balance - state.usedMargin;
-      if (marginRequired > freeMargin + 1e-6) {
-        tradeError.textContent = "Not enough margin. Reduce quantity or add funds.";
+      const freeMarginUSD = state.balance - state.usedMargin;
+
+      // If can't afford margin, do nothing (no error message)
+      if (marginRequiredUSD > freeMarginUSD + 1e-6) {
         return;
       }
+
+      // Charge the user: they "lose" the margin from balance and it's locked
+      state.balance -= marginRequiredUSD;
+      state.usedMargin += marginRequiredUSD;
 
       const position = {
         id: Date.now().toString(),
@@ -2589,10 +2769,9 @@
         name: currentTradeMarket.name,
         qty,
         price,
-        margin: marginRequired
+        margin: marginRequiredUSD
       };
 
-      state.usedMargin += marginRequired;
       state.positions.push(position);
       state.history.push({
         time: new Date().toISOString(),
@@ -2626,7 +2805,7 @@
 
     function openSellModal(marketId) {
       const baseUser = getCurrentUser();
-      if (!baseUser) {
+      if (!baseUser && mode === "normal") {
         openAuthModal("signin");
         return;
       }
@@ -2687,7 +2866,6 @@
     sellSubmit.addEventListener("click", () => {
       const state = getActiveState();
       if (!state || !currentSellMarket) {
-        sellError.textContent = "You must be logged in to sell.";
         return;
       }
 
@@ -2697,13 +2875,13 @@
 
       const qtyToClose = Math.max(1, parseInt(sellQtyInput.value || "0", 10));
       if (qtyToClose > totalQty) {
-        sellError.textContent = "You don't have that many units open.";
+        // if quantity invalid, do nothing (soft fail)
         return;
       }
 
       let remainingToClose = qtyToClose;
       let marginReleased = 0;
-      let pnl = 0;
+      let pnlUSD = 0;
       const currentPrice = currentSellMarket.lastPrice;
       const newPositions = [];
 
@@ -2715,7 +2893,7 @@
         const closeQty = Math.min(p.qty, remainingToClose);
         const notional = p.price * closeQty;
         const delta = (currentPrice - p.price) / p.price;
-        pnl += notional * delta;
+        pnlUSD += notional * delta;
         const marginPerUnit = p.margin / p.qty;
         marginReleased += marginPerUnit * closeQty;
 
@@ -2731,7 +2909,9 @@
 
       state.positions = newPositions;
       state.usedMargin = Math.max(0, state.usedMargin - marginReleased);
-      state.balance += pnl;
+      // Return margin + P&L to balance
+      state.balance += marginReleased + pnlUSD;
+
       state.history.push({
         time: new Date().toISOString(),
         action: "SELL",
@@ -2743,48 +2923,54 @@
       saveActiveState(state);
       closeSellModal();
       updateUI();
-      alert(
-        `Closed ${qtyToClose} unit(s) in ${currentSellMarket.symbol}. Realised P&L: ${
-          pnl >= 0 ? "+" : ""
-        }$${pnl.toFixed(2)}`
-      );
     });
 
     // ---------------------------
-    // ACCOUNT & PROFILE UI
+    // PROFILE & ACCOUNT UI
     // ---------------------------
 
     function updateProfileSection() {
       const baseUser = getCurrentUser();
       const state = getActiveState();
 
-      if (!baseUser) {
+      if (!baseUser && mode === "normal") {
         profileSubtitle.textContent =
-          "Connect an account to keep balances, open trades and simple statistics attached to your profile.";
+          "Connect an account or switch to Test mode with 1 000 000 balance. Currency and mode apply to the whole platform.";
         profileGuestHint.style.display = "block";
         profileOverviewDetails.style.display = "none";
         return;
       }
 
-      profileSubtitle.textContent = "Your current OrangeVest session at a glance.";
+      profileSubtitle.textContent =
+        mode === "test"
+          ? "Test mode: changes do not persist. Use this sandbox to experiment freely."
+          : "Your current OrangeVest session at a glance.";
+
       profileGuestHint.style.display = "none";
       profileOverviewDetails.style.display = "block";
 
-      profileDisplayName.textContent = baseUser.displayName || baseUser.email.split("@")[0];
-      profileEmail.textContent = baseUser.email;
+      if (baseUser) {
+        profileDisplayName.textContent = baseUser.displayName || baseUser.email.split("@")[0];
+        profileEmail.textContent = baseUser.email;
+        profileSessions.textContent = baseUser.sessions || 1;
+      } else {
+        profileDisplayName.textContent = "Test mode";
+        profileEmail.textContent = "Not signed in";
+        profileSessions.textContent = 0;
+      }
 
-      const equity = state.balance;
-      const usedMargin = state.usedMargin;
-      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
+      const equityUSD = state.balance;
+      const usedMarginUSD = state.usedMargin;
+      const riskUsage = equityUSD > 0 ? (usedMarginUSD / equityUSD) * 100 : 0;
 
-      profileBalance.textContent = formatMoney(state.balance);
+      profileBalance.textContent = formatMoneyDisplay(equityUSD);
       profileOpenPositions.textContent = state.positions.length;
-      profileUsedMargin.textContent = formatMoney(state.usedMargin);
+      profileUsedMargin.textContent = formatMoneyDisplay(usedMarginUSD);
       profileRiskUsage.textContent = riskUsage.toFixed(0) + "%";
-      profileSessions.textContent = baseUser.sessions || 1;
       profileTrades.textContent = (state.history || []).length;
 
-      displayNameInput.value = baseUser.displayName || "";
+      const displayNameBase = baseUser ? baseUser.displayName || "" : "";
+      displayNameInput.value = displayNameBase;
     }
 
     function renderPositions(state) {
@@ -2798,7 +2984,7 @@
       state.positions.forEach((p) => {
         const row = document.createElement("div");
         row.className = "position-row";
-        const notional = p.qty * p.price;
+        const notionalUSD = p.qty * p.price;
 
         row.innerHTML = `
           <div>
@@ -2806,8 +2992,8 @@
             <div class="position-symbol">${p.symbol} · Buy</div>
           </div>
           <div>${p.qty} units</div>
-          <div>${formatMoney(p.price)}</div>
-          <div>${formatMoney(notional)}</div>
+          <div>${formatMoneyDisplay(p.price)}</div>
+          <div>${formatMoneyDisplay(notionalUSD)}</div>
           <div style="text-align:right;">
             <button class="pos-sell-btn" data-pos-id="${p.id}">Sell</button>
           </div>
@@ -2827,22 +3013,24 @@
     }
 
     function updateUI() {
+      currencyLabelEl.textContent = `Display currency: ${appCurrency}`;
       const baseUser = getCurrentUser();
       const state = getActiveState();
 
-      if (!baseUser) {
+      if (!baseUser && mode === "normal") {
         navUser.innerHTML = `<span>Guest</span>`;
         btnLogin.style.display = "inline-flex";
         btnLogout.style.display = "none";
         accountTypeLabel.textContent = "Guest · Connect to start tracking";
-        kpiBalance.textContent = formatMoney(NORMAL_START_BALANCE);
-        kpiToday.textContent = "+ $0.00 today";
+        const demoEquityUSD = NORMAL_START_BALANCE;
+        kpiBalance.textContent = formatMoneyDisplay(demoEquityUSD);
+        kpiToday.textContent = formatMoneyDisplay(0) + " today";
         kpiToday.classList.remove("negative");
-        kpiPnL.textContent = "$0.00";
-        kpiOvernight.textContent = "– $0.00 overnight";
-        equityValue.textContent = "$0.00";
-        availableMarginValue.textContent = "$0.00";
-        usedMarginValue.textContent = "$0.00";
+        kpiPnL.textContent = formatMoneyDisplay(0);
+        kpiOvernight.textContent = "– " + formatMoneyDisplay(0).slice(1) + " overnight";
+        equityValue.textContent = formatMoneyDisplay(0);
+        availableMarginValue.textContent = formatMoneyDisplay(0);
+        usedMarginValue.textContent = formatMoneyDisplay(0);
         riskUsageLabel.textContent = "0%";
         riskUsageFill.style.width = "0%";
         riskStatusText.textContent = "No account connected";
@@ -2852,34 +3040,48 @@
         return;
       }
 
-      navUser.innerHTML = `Signed in as <span>${baseUser.displayName || baseUser.email}</span>`;
-      btnLogin.style.display = "none";
-      btnLogout.style.display = "inline";
+      if (mode === "test" && !baseUser) {
+        navUser.innerHTML = `<span>Test mode</span>`;
+        btnLogin.style.display = "inline-flex";
+        btnLogout.style.display = "none";
+      } else if (baseUser) {
+        navUser.innerHTML = `Signed in as <span>${baseUser.displayName || baseUser.email}</span>`;
+        btnLogin.style.display = "none";
+        btnLogout.style.display = "inline";
+      }
 
-      const equity = state.balance;
-      const usedMargin = state.usedMargin;
-      const freeMargin = Math.max(0, equity - usedMargin);
+      const equityUSD = state.balance;
+      const usedMarginUSD = state.usedMargin;
+      const freeMarginUSD = Math.max(0, equityUSD - usedMarginUSD);
 
-      accountTypeLabel.textContent = "Profile · Connected";
+      accountTypeLabel.textContent =
+        mode === "test"
+          ? "Test mode · Not saved"
+          : baseUser
+          ? "Profile · Connected"
+          : "Guest";
 
-      kpiBalance.textContent = formatMoney(state.balance);
-      kpiToday.textContent = "+ $0.00 today";
+      kpiBalance.textContent = formatMoneyDisplay(equityUSD);
+      kpiToday.textContent = formatMoneyDisplay(0) + " today";
       kpiToday.classList.remove("negative");
-      kpiPnL.textContent = "$0.00";
-      kpiOvernight.textContent = "– $0.00 overnight";
+      kpiPnL.textContent = formatMoneyDisplay(0);
+      kpiOvernight.textContent = "– " + formatMoneyDisplay(0).slice(1) + " overnight";
 
-      equityValue.textContent = formatMoney(equity);
-      availableMarginValue.textContent = formatMoney(freeMargin);
-      usedMarginValue.textContent = formatMoney(usedMargin);
+      equityValue.textContent = formatMoneyDisplay(equityUSD);
+      availableMarginValue.textContent = formatMoneyDisplay(freeMarginUSD);
+      usedMarginValue.textContent = formatMoneyDisplay(usedMarginUSD);
 
-      const riskUsage = equity > 0 ? (usedMargin / equity) * 100 : 0;
+      const riskUsage = equityUSD > 0 ? (usedMarginUSD / equityUSD) * 100 : 0;
       riskUsageLabel.textContent = riskUsage.toFixed(0) + "%";
       riskUsageFill.style.width = Math.min(100, riskUsage).toFixed(0) + "%";
 
       let avgLev = 0;
       if (state.positions.length > 0) {
-        const totalNotional = state.positions.reduce((acc, p) => acc + p.qty * p.price, 0);
-        avgLev = totalNotional / equity;
+        const totalNotionalUSD = state.positions.reduce(
+          (acc, p) => acc + p.qty * p.price,
+          0
+        );
+        avgLev = totalNotionalUSD / equityUSD;
       }
       avgLeverage.textContent = "1 : " + avgLev.toFixed(1);
 
@@ -2895,6 +3097,7 @@
 
       renderPositions(state);
       updateProfileSection();
+      updateModeUI();
     }
 
     // ---------------------------
@@ -2909,19 +3112,30 @@
         renderTicker();
         selectMostVolatileHeroMarket();
       } catch {
-        // network error; ignore for now
+        // ignore network errors
       }
     }
 
+    async function seedAllCandlesForBoard() {
+      const promises = MARKETS.map(async (m) => {
+        try {
+          m.candles = await fetchCandles(m.id, "1h", 80);
+        } catch {
+          m.candles = [];
+        }
+      });
+      await Promise.all(promises);
+      drawAllSparklines();
+    }
+
     async function init() {
-      // First tick
+      updateModeUI();
       await refreshMarketData();
       await seedAllCandlesForBoard();
-      drawAllSparklines();
       updateUI();
 
-      // Refresh prices every ~3 seconds
-      setInterval(refreshMarketData, 3000);
+      // Refresh prices every second
+      setInterval(refreshMarketData, 1000);
     }
 
     init();
